@@ -45,7 +45,7 @@ model:
 gt:
   layer_type: CustomGatedGCN+Transformer
   layers: 12
-  n_heads: 22
+  n_heads: 32
   dim_hidden: 512  # `gt.dim_hidden` must match `gnn.dim_inner`
   dropout: 0.1
   attn_dropout: 0.1
