@@ -7,9 +7,7 @@ import graphgps  # noqa, register custom modules
 from graphgps.optimizer.extra_optimizers import ExtendedSchedulerConfig
 
 from torch_geometric.graphgym.cmd_args import parse_args
-from torch_geometric.graphgym.config import (cfg, dump_cfg,
-                                             set_agg_dir, set_cfg, load_cfg,
-                                             makedirs_rm_exist)
+from torch_geometric.graphgym.config import (cfg, dump_cfg, set_agg_dir, set_cfg, load_cfg, makedirs_rm_exist)
 from torch_geometric.graphgym.loader import create_loader
 from torch_geometric.graphgym.logger import set_printing
 from torch_geometric.graphgym.optim import create_optimizer, \
@@ -28,11 +26,7 @@ from graphgps.logger import create_logger
 
 
 def new_optimizer_config(cfg):
-    return OptimizerConfig(optimizer=cfg.optim.optimizer,
-                           base_lr=cfg.optim.base_lr,
-                           weight_decay=cfg.optim.weight_decay,
-                           momentum=cfg.optim.momentum)
-
+    return OptimizerConfig(optimizer=cfg.optim.optimizer, base_lr=cfg.optim.base_lr, weight_decay=cfg.optim.weight_decay, momentum=cfg.optim.momentum)
 
 def new_scheduler_config(cfg):
     return ExtendedSchedulerConfig(
@@ -42,7 +36,6 @@ def new_scheduler_config(cfg):
         schedule_patience=cfg.optim.schedule_patience, min_lr=cfg.optim.min_lr,
         num_warmup_epochs=cfg.optim.num_warmup_epochs,
         train_mode=cfg.train.mode, eval_period=cfg.train.eval_period)
-
 
 def custom_set_out_dir(cfg, cfg_fname, name_tag):
     """Set custom main output directory path to cfg.
@@ -58,7 +51,6 @@ def custom_set_out_dir(cfg, cfg_fname, name_tag):
     run_name += f"-{name_tag}" if name_tag else ""
     cfg.out_dir = os.path.join(cfg.out_dir, run_name)
 
-
 def custom_set_run_dir(cfg, run_id):
     """Custom output directory naming for each experiment run.
 
@@ -72,7 +64,6 @@ def custom_set_run_dir(cfg, run_id):
         os.makedirs(cfg.run_dir, exist_ok=True)
     else:
         makedirs_rm_exist(cfg.run_dir)
-
 
 def run_loop_settings():
     """Create main loop execution settings based on the current cfg.
@@ -108,7 +99,6 @@ def run_loop_settings():
         run_ids = split_indices
     return run_ids, seeds, split_indices
 
-
 if __name__ == '__main__':
     # Load cmd line args
     args = parse_args()
@@ -131,6 +121,7 @@ if __name__ == '__main__':
         auto_select_device()
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
+
         logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
                      f"split_index={cfg.dataset.split_index}")
         logging.info(f"    Starting now: {datetime.datetime.now()}")
@@ -143,8 +134,7 @@ if __name__ == '__main__':
                 model, cfg.pretrained.dir, cfg.pretrained.freeze_main,
                 cfg.pretrained.reset_prediction_head
             )
-        optimizer = create_optimizer(model.parameters(),
-                                     new_optimizer_config(cfg))
+        optimizer = create_optimizer(model.parameters(), new_optimizer_config(cfg))
         scheduler = create_scheduler(optimizer, new_scheduler_config(cfg))
         # Print model info
         logging.info(model)
@@ -158,8 +148,7 @@ if __name__ == '__main__':
                                 "default train.mode, set it to `custom`")
             train(loggers, loaders, model, optimizer, scheduler)
         else:
-            train_dict[cfg.train.mode](loggers, loaders, model, optimizer,
-                                       scheduler)
+            train_dict[cfg.train.mode](loggers, loaders, model, optimizer, scheduler)
     # Aggregate results from different seeds
     try:
         agg_runs(cfg.out_dir, cfg.metric_best)

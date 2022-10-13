@@ -502,7 +502,7 @@ class Attention(nn.Module):
         out = self.to_out(out)
         return self.dropout(out)
 
-class SelfAttention(Attention):
+class PerformerSelfAttention(Attention):
     def forward(self, *args, context = None, **kwargs):
         assert not exists(context), 'self attention should not receive context'
         return super().forward(*args, **kwargs)

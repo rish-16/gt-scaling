@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch_geometric.nn as pygnn
-from performer_pytorch import SelfAttention
+from performer_pytorch import PerformerSelfAttention
 from torch_geometric.data import Batch
 from torch_geometric.nn import Linear as Linear_pyg
 from torch_geometric.utils import to_dense_batch
@@ -11,7 +11,9 @@ from torch_geometric.utils import to_dense_batch
 from graphgps.layer.gatedgcn_layer import GatedGCNLayer
 from graphgps.layer.gine_conv_layer import GINEConvESLapPE
 from graphgps.layer.bigbird_layer import SingleBigBirdLayer
-
+# from graphgps.layer.linformer_layer import LinformerSelfAttention
+# from graphgps.layer.reformer_layer import ReformerSelfAttention
+# from graphgps.layer.funtf_layer import FunTFSelfAttention
 
 class GPSLayer(nn.Module):
     """Local MPNN + full graph attention x-former layer.
@@ -37,18 +39,17 @@ class GPSLayer(nn.Module):
         elif local_gnn_type == 'GENConv':
             self.local_model = pygnn.GENConv(dim_h, dim_h)
         elif local_gnn_type == 'GINE':
-            gin_nn = nn.Sequential(Linear_pyg(dim_h, dim_h),
-                                   nn.ReLU(),
-                                   Linear_pyg(dim_h, dim_h))
+            gin_nn = nn.Sequential(
+                        Linear_pyg(dim_h, dim_h),
+                        nn.ReLU(),
+                        Linear_pyg(dim_h, dim_h)
+                    )
             if self.equivstable_pe:  # Use specialised GINE layer for EquivStableLapPE.
                 self.local_model = GINEConvESLapPE(gin_nn)
             else:
                 self.local_model = pygnn.GINEConv(gin_nn)
         elif local_gnn_type == 'GAT':
-            self.local_model = pygnn.GATConv(in_channels=dim_h,
-                                             out_channels=dim_h // num_heads,
-                                             heads=num_heads,
-                                             edge_dim=dim_h)
+            self.local_model = pygnn.GATConv(in_channels=dim_h, out_channels=dim_h // num_heads, heads=num_heads, edge_dim=dim_h)
         elif local_gnn_type == 'PNA':
             # Defaults from the paper.
             # aggregators = ['mean', 'min', 'max', 'std']
@@ -78,21 +79,20 @@ class GPSLayer(nn.Module):
         if global_model_type == 'None':
             self.self_attn = None
         elif global_model_type == 'Transformer':
-            self.self_attn = torch.nn.MultiheadAttention(
-                dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
-            # self.global_model = torch.nn.TransformerEncoderLayer(
-            #     d_model=dim_h, nhead=num_heads,
-            #     dim_feedforward=2048, dropout=0.1, activation=F.relu,
-            #     layer_norm_eps=1e-5, batch_first=True)
+            self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
         elif global_model_type == 'Performer':
-            self.self_attn = SelfAttention(
-                dim=dim_h, heads=num_heads,
-                dropout=self.attn_dropout, causal=False)
+            self.self_attn = PerformerSelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, causal=False)
         elif global_model_type == "BigBird":
             bigbird_cfg.dim_hidden = dim_h
             bigbird_cfg.n_heads = num_heads
             bigbird_cfg.dropout = dropout
             self.self_attn = SingleBigBirdLayer(bigbird_cfg)
+        elif global_model_type == "FunnelTransformer":
+            raise NotImplementedError(f"FunnelTransformer not implemented yet.")
+        elif global_model_type == "Linformer":
+            raise NotImplementedError(f"Linformer not implemented yet.")
+        elif global_model_type == "Reformer":
+            raise NotImplementedError(f"Reformer not implemented yet.")
         else:
             raise ValueError(f"Unsupported global x-former model: "
                              f"{global_model_type}")
@@ -169,6 +169,8 @@ class GPSLayer(nn.Module):
             if self.global_model_type == 'Transformer':
                 h_attn = self._sa_block(h_dense, None, ~mask)[mask]
             elif self.global_model_type == 'Performer':
+                h_attn = self.self_attn(h_dense, mask=mask)[mask]
+            elif self.global_model_type == "Linformer":
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == 'BigBird':
                 h_attn = self.self_attn(h_dense, attention_mask=mask)
