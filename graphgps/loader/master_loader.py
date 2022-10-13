@@ -380,7 +380,8 @@ def preformat_OGB_PCQM4Mv2(dataset_dir, name):
         raise e
 
 
-    dataset = PygPCQM4Mv2Dataset(root=dataset_dir)
+    # dataset = PygPCQM4Mv2Dataset(root=dataset_dir)
+    dataset = PygPCQM4Mv2Dataset(root="../datasets/")
     split_idx = dataset.get_idx_split()
 
     rng = default_rng(seed=42)
