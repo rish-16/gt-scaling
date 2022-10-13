@@ -484,7 +484,6 @@ class Attention(nn.Module):
         if not empty(q):
             if exists(context_mask):
                 global_mask = context_mask[:, None, :, None]
-                v.masked_fill_(~global_mask, 0.)
 
             if exists(pos_emb) and not cross_attend:
                 q, k = apply_rotary_pos_emb(q, k, pos_emb)

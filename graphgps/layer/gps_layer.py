@@ -11,7 +11,7 @@ from torch_geometric.utils import to_dense_batch
 from graphgps.layer.gatedgcn_layer import GatedGCNLayer
 from graphgps.layer.gine_conv_layer import GINEConvESLapPE
 from graphgps.layer.bigbird_layer import SingleBigBirdLayer
-# from graphgps.layer.linformer_layer import LinformerSelfAttention
+from graphgps.layer.linformer_layer import LinformerSelfAttention
 # from graphgps.layer.reformer_layer import ReformerSelfAttention
 # from graphgps.layer.funtf_layer import FunTFSelfAttention
 
@@ -90,7 +90,8 @@ class GPSLayer(nn.Module):
         elif global_model_type == "FunnelTransformer":
             raise NotImplementedError(f"FunnelTransformer not implemented yet.")
         elif global_model_type == "Linformer":
-            raise NotImplementedError(f"Linformer not implemented yet.")
+            # raise NotImplementedError(f"Linformer not implemented yet.")
+            self.self_attn = LinformerSelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout)
         elif global_model_type == "Reformer":
             raise NotImplementedError(f"Reformer not implemented yet.")
         else:
@@ -150,8 +151,7 @@ class GPSLayer(nn.Module):
                 batch.edge_attr = local_out.edge_attr
             else:
                 if self.equivstable_pe:
-                    h_local = self.local_model(h, batch.edge_index, batch.edge_attr,
-                                               batch.pe_EquivStableLapPE)
+                    h_local = self.local_model(h, batch.edge_index, batch.edge_attr, batch.pe_EquivStableLapPE)
                 else:
                     h_local = self.local_model(h, batch.edge_index, batch.edge_attr)
                 h_local = self.dropout_local(h_local)

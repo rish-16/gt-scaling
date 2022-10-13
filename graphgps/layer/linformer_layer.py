@@ -232,7 +232,17 @@ class FeedForward(nn.Module):
         return x
 
 class LinformerSelfAttention(nn.Module):
-    def __init__(self, dim, seq_len, k = 256, heads = 8, dim_head = None, one_kv_head = False, share_kv = False, dropout = 0.):
+    def __init__(
+            self, 
+            dim, 
+            seq_len, 
+            k = 256, 
+            heads = 8, 
+            dim_head = 64, 
+            one_kv_head = False, 
+            share_kv = False, 
+            dropout = 0.
+        ):
         super().__init__()
         assert (dim % heads) == 0, 'dimension must be divisible by the number of heads'
 
