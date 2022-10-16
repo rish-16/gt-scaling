@@ -109,6 +109,7 @@ if __name__ == '__main__':
     dump_cfg(cfg)
     # Set Pytorch environment
     torch.set_num_threads(cfg.num_threads)
+    gpu_dev = str(input("Enter GPU device: "))
     # Repeat for multiple experiment runs
     for run_id, seed, split_index in zip(*run_loop_settings()):
         # Set configurations for each run
@@ -118,7 +119,10 @@ if __name__ == '__main__':
         cfg.seed = seed
         cfg.run_id = run_id
         seed_everything(cfg.seed)
-        auto_select_device()
+        
+        # auto_select_device()
+        cfg.device = f'cuda:{gpu_dev}'
+
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
 
