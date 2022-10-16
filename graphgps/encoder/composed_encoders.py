@@ -31,6 +31,23 @@ def concat_node_encoders(encoder_classes, pe_enc_names):
         new node encoder class
     """
 
+    class Concat1NodeEncoder(torch.nn.Module):
+        """Encoder that concatenates two node encoders.
+        """
+        enc1_cls = None
+
+        def __init__(self, dim_emb):
+            super().__init__()
+            
+            if cfg.posenc_EquivStableLapPE.enable: # Special handling for Equiv_Stable LapPE where node feats and PE are not concat
+                self.encoder1 = self.enc1_cls(dim_emb)
+            else:
+                self.encoder1 = self.enc1_cls(dim_emb)
+
+        def forward(self, batch):
+            batch = self.encoder1(batch)
+            return batch
+
     class Concat2NodeEncoder(torch.nn.Module):
         """Encoder that concatenates two node encoders.
         """
@@ -114,7 +131,9 @@ def concat_node_encoders(encoder_classes, pe_enc_names):
             return batch
 
     # Configure the correct concatenation class and return it.
-    if len(encoder_classes) == 2:
+    if len(encoder_classes) == 1:
+        Concat2NodeEncoder.enc1_cls = encoder_classes[0]
+    elif len(encoder_classes) == 2:
         Concat2NodeEncoder.enc1_cls = encoder_classes[0]
         Concat2NodeEncoder.enc2_cls = encoder_classes[1]
         Concat2NodeEncoder.enc2_name = pe_enc_names[0]

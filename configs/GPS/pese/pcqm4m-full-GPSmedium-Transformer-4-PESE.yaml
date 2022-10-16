@@ -89,3 +89,15 @@ optim:
 #  reduce_factor: 0.5
 #  schedule_patience: 10
 #  min_lr: 1e-5
+
+
+
+./results/pcqm4m-subset-GPSlarge-RWSE-LapPE-BigBird/0/skpt/*
+./results/pcqm4m-subset-GPSlarge-RWSE-LapPE-Performer/0/ckpt/*
+./results/pcqm4m-subset-GPSlarge-RWSE-LapPE-Transformer/0/ckpt/*
+./results/pcqm4m-subset-GPSmedium-RWSE-LapPE-BigBird/0/ckpt/*
+./results/pcqm4m-subset-GPSmedium-RWSE-LapPE-Performer/0/ckpt/*
+./results/pcqm4m-subset-GPSmedium-RWSE-LapPE-Transformer/0/ckpt/*
+./results/pcqm4m-subset-GPSsmall-RWSE-LapPE-BigBird/0/ckpt/*
+./results/pcqm4m-subset-GPSsmall-RWSE-LapPE-Performer/0/ckpt/*
+./results/pcqm4m-subset-GPSsmall-RWSE-LapPE-Transformer/0/ckpt/*
