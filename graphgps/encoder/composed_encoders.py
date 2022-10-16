@@ -188,7 +188,7 @@ for ds_enc_name, ds_enc_cls in ds_encs.items():
 for ds_enc_name, ds_enc_cls in ds_encs.items():
     register_node_encoder(
         f"{ds_enc_name}",
-        concat_node_encoders([ds_enc_cls])
+        concat_node_encoders([ds_enc_cls], [])
     )        
 
 # Combine both LapPE and RWSE positional encodings.
