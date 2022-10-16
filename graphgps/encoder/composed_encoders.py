@@ -79,6 +79,39 @@ def concat_node_encoders(encoder_classes, pe_enc_names):
             batch = self.encoder2(batch)
             batch = self.encoder3(batch)
             return batch
+    
+    class Concat4NodeEncoder(torch.nn.Module):
+        """Encoder that concatenates four node encoders.
+        """
+        enc1_cls = None
+        
+        enc2_cls = None
+        enc2_name = None
+        
+        enc3_cls = None
+        enc3_name = None
+
+        enc4_cls = None
+        enc4_name = None
+
+        def __init__(self, dim_emb):
+            super().__init__()
+            # PE dims can only be gathered once the cfg is loaded.
+            enc2_dim_pe = getattr(cfg, f"posenc_{self.enc2_name}").dim_pe
+            enc3_dim_pe = getattr(cfg, f"posenc_{self.enc3_name}").dim_pe
+            enc4_dim_pe = getattr(cfg, f"posenc_{self.enc4_name}").dim_pe
+
+            self.encoder1 = self.enc1_cls(dim_emb - enc2_dim_pe - enc3_dim_pe - enc4_dim_pe)
+            self.encoder2 = self.enc2_cls(dim_emb - enc3_dim_pe - enc4_dim_pe, expand_x=False)
+            self.encoder3 = self.enc3_cls(dim_emb - enc4_dim_pe, expand_x=False)
+            self.encoder4 = self.enc4_cls(dim_emb, expand_x=False)
+
+        def forward(self, batch):
+            batch = self.encoder1(batch)
+            batch = self.encoder2(batch)
+            batch = self.encoder3(batch)
+            batch = self.encoder4(batch)
+            return batch
 
     # Configure the correct concatenation class and return it.
     if len(encoder_classes) == 2:
@@ -93,6 +126,15 @@ def concat_node_encoders(encoder_classes, pe_enc_names):
         Concat3NodeEncoder.enc2_name = pe_enc_names[0]
         Concat3NodeEncoder.enc3_name = pe_enc_names[1]
         return Concat3NodeEncoder
+    elif len(encoder_classes) == 4:
+        Concat4NodeEncoder.enc1_cls = encoder_classes[0]
+        Concat4NodeEncoder.enc2_cls = encoder_classes[1]
+        Concat4NodeEncoder.enc3_cls = encoder_classes[2]
+        Concat4NodeEncoder.enc4_cls = encoder_classes[3]
+        Concat4NodeEncoder.enc2_name = pe_enc_names[0]
+        Concat4NodeEncoder.enc3_name = pe_enc_names[1]
+        Concat4NodeEncoder.enc4_name = pe_enc_names[2]
+        return Concat4NodeEncoder
     else:
         raise ValueError(f"Does not support concatenation of "
                          f"{len(encoder_classes)} encoder classes.")
@@ -123,6 +165,13 @@ for ds_enc_name, ds_enc_cls in ds_encs.items():
                                  [pe_enc_name])
         )
 
+# Use only AtomEncoder
+for ds_enc_name, ds_enc_cls in ds_encs.items():
+    register_node_encoder(
+        f"{ds_enc_name}",
+        concat_node_encoders([ds_enc_cls])
+    )        
+
 # Combine both LapPE and RWSE positional encodings.
 for ds_enc_name, ds_enc_cls in ds_encs.items():
     register_node_encoder(
@@ -137,4 +186,12 @@ for ds_enc_name, ds_enc_cls in ds_encs.items():
         f"{ds_enc_name}+SignNet+RWSE",
         concat_node_encoders([ds_enc_cls, SignNetNodeEncoder, RWSENodeEncoder],
                              ['SignNet', 'RWSE'])
+    )
+
+# Combine both LapPE, RWSE, and SignNet positional encodings.
+for ds_enc_name, ds_enc_cls in ds_encs.items():
+    register_node_encoder(
+        f"{ds_enc_name}+LapPE+RWSE+SignNet",
+        concat_node_encoders([ds_enc_cls, LapPENodeEncoder, RWSENodeEncoder, SignNetNodeEncoder],
+                             ['LapPE', 'RWSE', 'SignNet'])
     )
