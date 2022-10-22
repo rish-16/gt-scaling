@@ -116,11 +116,10 @@ if __name__ == '__main__':
 
     ctr = Counter()
 
-    for i in range(len(dataset.data.x)):
-        if i % 200000 == 0:
-            print (dataset.data.x[i].shape)
-            print (dataset.data.x[i+1].shape)
-            print (dataset.data.x[i+2].shape)
-            print (dataset.data.x[i+3].shape)
-            print (dataset.data.x[i+4].shape)
+    i = 0
+    print (dataset[i].x.shape)
+    print (dataset[i+1].x.shape)
+    print (dataset[i+2].x.shape)
+    print (dataset[i+3].x.shape)
+    print (dataset[i+4].x.shape)
         
