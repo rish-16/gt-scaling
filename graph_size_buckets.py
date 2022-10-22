@@ -10,7 +10,7 @@ import torch
 from collections import Counter
 from torch_geometric.data import InMemoryDataset
 from torch_geometric.data import Data
-
+from pprint import pprint
 
 class PygPCQM4Mv2Dataset(InMemoryDataset):
     def __init__(self, root='../datasets/', smiles2graph=smiles2graph, transform=None, pre_transform=None):
@@ -116,10 +116,10 @@ if __name__ == '__main__':
 
     ctr = Counter()
 
-    i = 0
-    print (dataset[i].x.shape)
-    print (dataset[i+1].x.shape)
-    print (dataset[i+2].x.shape)
-    print (dataset[i+3].x.shape)
-    print (dataset[i+4].x.shape)
-        
+    for i in range(len(dataset)):
+        g = dataset[i]
+        ctr[g.x.size(0)] += 1
+
+    pprint (ctr)
+    print ()
+    pprint (dict(ctr))
