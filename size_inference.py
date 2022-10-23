@@ -8,6 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 from collections import Counter
+import torch_geometric as pyg
 from torch_geometric.data import InMemoryDataset
 from torch_geometric.data import Data
 from pprint import pprint
@@ -131,7 +132,7 @@ if __name__ == '__main__':
     # truncate to only single batch size
     for sb, graphs in container.items():
         container[sb] = graphs[:B]
-        batch = Batch.from_data_list(container[sb])
+        batch = pyg.data.Batch.from_data_list(container[sb])
         batches.append(batch)
 
     print (batches)        
