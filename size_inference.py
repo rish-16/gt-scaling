@@ -145,7 +145,7 @@ def run_loop_settings():
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
-    dataset = dataset[:10000]
+    dataset = dataset[:1000]
     # print(dataset)
     # print(dataset.data.edge_index)
     # print(dataset.data.edge_index.shape)
