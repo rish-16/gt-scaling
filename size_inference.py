@@ -1,22 +1,32 @@
-import os
+import os, logging, datetime, shutil, time
 import os.path as osp
-import shutil
 from ogb.utils import smiles2graph
 from ogb.utils.torch_util import replace_numpy_with_torchtensor
 from ogb.utils.url import decide_download, download_url, extract_zip
-
-from torch_geometric.graphgym.cmd_args import parse_args
-from torch_geometric.graphgym.config import (cfg, dump_cfg, set_agg_dir, set_cfg, load_cfg, makedirs_rm_exist)
-from torch_geometric.graphgym.model_builder import create_model
-
 import pandas as pd
 from tqdm import tqdm
 import torch
-from collections import Counter
-import torch_geometric as pyg
+
+from graphgps.optimizer.extra_optimizers import ExtendedSchedulerConfig
+from torch_geometric.graphgym.cmd_args import parse_args
+from torch_geometric.graphgym.config import (cfg, dump_cfg, set_agg_dir, set_cfg, load_cfg, makedirs_rm_exist)
+from torch_geometric.graphgym.loader import create_loader
+from torch_geometric.graphgym.logger import set_printing
+from torch_geometric.graphgym.optim import create_optimizer, create_scheduler, OptimizerConfig
+from torch_geometric.graphgym.model_builder import create_model
+from torch_geometric.graphgym.train import train
+from torch_geometric.graphgym.utils.agg_runs import agg_runs
+from torch_geometric.graphgym.utils.comp_budget import params_count
+from torch_geometric.graphgym.utils.device import auto_select_device
+from torch_geometric.graphgym.register import train_dict
+from torch_geometric.graphgym.loss import compute_loss
+from torch_geometric import seed_everything
+
+from graphgps.finetuning import load_pretrained_model_cfg, init_model_from_pretrained
+from graphgps.logger import create_logger
+
 from torch_geometric.data import InMemoryDataset
-from torch_geometric.data import Data
-from pprint import pprint
+from torch_geometric.data import 
 
 class PygPCQM4Mv2Dataset(InMemoryDataset):
     def __init__(self, root='../datasets/', smiles2graph=smiles2graph, transform=None, pre_transform=None):
@@ -176,13 +186,16 @@ if __name__ == '__main__':
     pprint (batches)
 
     args = parse_args()
+
     set_cfg(cfg)
     load_cfg(cfg, args)
-    # custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
+    custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
     dump_cfg(cfg)
+    
     # Set Pytorch environment
     torch.set_num_threads(cfg.num_threads)
     gpu_dev = str(input("Enter GPU device: "))
+
     # Repeat for multiple experiment runs
     for run_id, seed, split_index in zip(*run_loop_settings()):
         # Set configurations for each run
@@ -201,4 +214,3 @@ if __name__ == '__main__':
 
         model = create_model()
 
-        
