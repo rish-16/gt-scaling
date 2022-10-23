@@ -214,7 +214,7 @@ if __name__ == '__main__':
         batch = pyg.data.Batch.from_data_list(container[sb])
         batches.append(batch)
 
-    pprint (batches)
+    # pprint (batches)
 
     args = parse_args()
 
@@ -245,5 +245,17 @@ if __name__ == '__main__':
 
         model = create_model()
 
-        y1 = model(batches[0])
-        print (y1)
+        # iterature through size classes
+        size_times = {}
+        for bi in range(len(batches)):
+            start_time = time.time()
+            cur_batch = batches[bi]
+            cur_batch = cur_batch.cuda()
+            y1 = model(cur_batch)
+            end_time = time.time()
+            time_taken = end_time - start_time
+
+            cur_N = cur_batch[0].x.size(0)
+            size_times[cur_N] = time_taken / len(cur_batch)
+
+        pprint (size_times)
