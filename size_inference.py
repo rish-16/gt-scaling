@@ -244,5 +244,6 @@ if __name__ == '__main__':
         #     cfg = load_pretrained_model_cfg(cfg)
 
         model = create_model()
-        
-        print (model)
+
+        y1 = model(batches[0])
+        print (y1)
