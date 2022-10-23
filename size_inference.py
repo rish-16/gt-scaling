@@ -4,6 +4,8 @@ import shutil
 from ogb.utils import smiles2graph
 from ogb.utils.torch_util import replace_numpy_with_torchtensor
 from ogb.utils.url import decide_download, download_url, extract_zip
+from torch_geometric.graphgym.config import (cfg, dump_cfg, set_agg_dir, set_cfg, load_cfg, makedirs_rm_exist)
+from torch_geometric.graphgym.model_builder import create_model
 import pandas as pd
 from tqdm import tqdm
 import torch
@@ -104,10 +106,43 @@ class PygPCQM4Mv2Dataset(InMemoryDataset):
         split_dict = replace_numpy_with_torchtensor(torch.load(osp.join(self.root, 'split_dict.pt')))
         return split_dict
 
+def run_loop_settings():
+    """Create main loop execution settings based on the current cfg.
+
+    Configures the main execution loop to run in one of two modes:
+    1. 'multi-seed' - Reproduces default behaviour of GraphGym when
+        args.repeats controls how many times the experiment run is repeated.
+        Each iteration is executed with a random seed set to an increment from
+        the previous one, starting at initial cfg.seed.
+    2. 'multi-split' - Executes the experiment run over multiple dataset splits,
+        these can be multiple CV splits or multiple standard splits. The random
+        seed is reset to the initial cfg.seed value for each run iteration.
+
+    Returns:
+        List of run IDs for each loop iteration
+        List of rng seeds to loop over
+        List of dataset split indices to loop over
+    """
+    if len(cfg.run_multiple_splits) == 0:
+        # 'multi-seed' run mode
+        num_iterations = args.repeat
+        seeds = [cfg.seed + x for x in range(num_iterations)]
+        split_indices = [cfg.dataset.split_index] * num_iterations
+        run_ids = seeds
+    else:
+        # 'multi-split' run mode
+        if args.repeat != 1:
+            raise NotImplementedError("Running multiple repeats of multiple "
+                                      "splits in one run is not supported.")
+        num_iterations = len(cfg.run_multiple_splits)
+        seeds = [cfg.seed] * num_iterations
+        split_indices = cfg.run_multiple_splits
+        run_ids = split_indices
+    return run_ids, seeds, split_indices
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
-    dataset = dataset[:1000]
+    dataset = dataset[:10000]
     # print(dataset)
     # print(dataset.data.edge_index)
     # print(dataset.data.edge_index.shape)
@@ -122,7 +157,7 @@ if __name__ == '__main__':
     for i in range(len(dataset)):
         g = dataset[i]
         N = g.x.size(0)
-        if N <= 31:
+        if N <= 31 and N > 1:
             if N in container.keys():
                 container[N].append(g)
             else:
@@ -135,4 +170,27 @@ if __name__ == '__main__':
         batch = pyg.data.Batch.from_data_list(container[sb])
         batches.append(batch)
 
-    print (batches)        
+    pprint (batches)
+
+    set_cfg(cfg)
+    load_cfg(cfg, args)
+    # Set Pytorch environment
+    torch.set_num_threads(cfg.num_threads)
+    gpu_dev = str(input("Enter GPU device: "))
+    # Repeat for multiple experiment runs
+    for run_id, seed, split_index in zip(*run_loop_settings()):
+        # Set configurations for each run
+        custom_set_run_dir(cfg, run_id)
+        set_printing()
+        cfg.dataset.split_index = split_index
+        cfg.seed = seed
+        cfg.run_id = run_id
+        seed_everything(cfg.seed)
+        
+        # auto_select_device()
+        cfg.device = f'cuda:{gpu_dev}'
+
+        if cfg.pretrained.dir:
+            cfg = load_pretrained_model_cfg(cfg)
+
+        model = create_model()
