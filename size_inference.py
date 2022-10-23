@@ -123,7 +123,7 @@ if __name__ == '__main__':
         N = g.x.size(0)
         if N <= 31:
             if N in container.keys():
-                container.append(g)
+                container[N].append(g)
             else:
                 container[N] = [g]
 
