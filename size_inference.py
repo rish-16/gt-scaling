@@ -25,8 +25,9 @@ from torch_geometric import seed_everything
 from graphgps.finetuning import load_pretrained_model_cfg, init_model_from_pretrained
 from graphgps.logger import create_logger
 
+import torch_geometric as pyg
 from torch_geometric.data import InMemoryDataset
-from torch_geometric.data import 
+from torch_geometric.data import Data
 
 class PygPCQM4Mv2Dataset(InMemoryDataset):
     def __init__(self, root='../datasets/', smiles2graph=smiles2graph, transform=None, pre_transform=None):
