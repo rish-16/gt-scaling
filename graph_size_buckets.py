@@ -1,125 +1,196 @@
-import os
-import os.path as osp
-import shutil
-from ogb.utils import smiles2graph
-from ogb.utils.torch_util import replace_numpy_with_torchtensor
-from ogb.utils.url import decide_download, download_url, extract_zip
-import pandas as pd
-from tqdm import tqdm
-import torch
-from collections import Counter
-from torch_geometric.data import InMemoryDataset
-from torch_geometric.data import Data
-from pprint import pprint
+# import os
+# import os.path as osp
+# import shutil
+# from ogb.utils import smiles2graph
+# from ogb.utils.torch_util import replace_numpy_with_torchtensor
+# from ogb.utils.url import decide_download, download_url, extract_zip
+# import pandas as pd
+# from tqdm import tqdm
+# import torch
+# from collections import Counter
+# from torch_geometric.data import InMemoryDataset
+# from torch_geometric.data import Data
+# from pprint import pprint
 
-class PygPCQM4Mv2Dataset(InMemoryDataset):
-    def __init__(self, root='../datasets/', smiles2graph=smiles2graph, transform=None, pre_transform=None):
-        """
-            Pytorch Geometric PCQM4Mv2 dataset object
-                - root (str): the dataset folder will be located at root/pcqm4m_kddcup2021
-                - smiles2graph (callable): A callable function that converts a SMILES string into a graph object
-                    * The default smiles2graph requires rdkit to be installed
-        """
+# class PygPCQM4Mv2Dataset(InMemoryDataset):
+#     def __init__(self, root='../datasets/', smiles2graph=smiles2graph, transform=None, pre_transform=None):
+#         """
+#             Pytorch Geometric PCQM4Mv2 dataset object
+#                 - root (str): the dataset folder will be located at root/pcqm4m_kddcup2021
+#                 - smiles2graph (callable): A callable function that converts a SMILES string into a graph object
+#                     * The default smiles2graph requires rdkit to be installed
+#         """
 
-        self.original_root = root
-        self.smiles2graph = smiles2graph
-        self.folder = osp.join(root, 'pcqm4m-v2')
-        self.version = 1
+#         self.original_root = root
+#         self.smiles2graph = smiles2graph
+#         self.folder = osp.join(root, 'pcqm4m-v2')
+#         self.version = 1
 
-        # Old url hosted at Stanford
-        # md5sum: 65b742bafca5670be4497499db7d361b
-        # self.url = f'http://ogb-data.stanford.edu/data/lsc/pcqm4m-v2.zip'
-        # New url hosted by DGL team at AWS--much faster to download
-        self.url = 'https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip'
+#         # Old url hosted at Stanford
+#         # md5sum: 65b742bafca5670be4497499db7d361b
+#         # self.url = f'http://ogb-data.stanford.edu/data/lsc/pcqm4m-v2.zip'
+#         # New url hosted by DGL team at AWS--much faster to download
+#         self.url = 'https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip'
 
-        # check version and update if necessary
-        if osp.isdir(self.folder) and (not osp.exists(osp.join(self.folder, f'RELEASE_v{self.version}.txt'))):
-            print('PCQM4Mv2 dataset has been updated.')
-            if input('Will you update the dataset now? (y/N)\n').lower() == 'y':
-                shutil.rmtree(self.folder)
+#         # check version and update if necessary
+#         if osp.isdir(self.folder) and (not osp.exists(osp.join(self.folder, f'RELEASE_v{self.version}.txt'))):
+#             print('PCQM4Mv2 dataset has been updated.')
+#             if input('Will you update the dataset now? (y/N)\n').lower() == 'y':
+#                 shutil.rmtree(self.folder)
 
-        super(PygPCQM4Mv2Dataset, self).__init__(self.folder, transform, pre_transform)
+#         super(PygPCQM4Mv2Dataset, self).__init__(self.folder, transform, pre_transform)
 
-        self.data, self.slices = torch.load(self.processed_paths[0])
+#         self.data, self.slices = torch.load(self.processed_paths[0])
 
-    @property
-    def raw_file_names(self):
-        return 'data.csv.gz'
+#     @property
+#     def raw_file_names(self):
+#         return 'data.csv.gz'
 
-    @property
-    def processed_file_names(self):
-        return 'geometric_data_processed.pt'
+#     @property
+#     def processed_file_names(self):
+#         return 'geometric_data_processed.pt'
 
-    def download(self):
-        if decide_download(self.url):
-            path = download_url(self.url, self.original_root)
-            extract_zip(path, self.original_root)
-            os.unlink(path)
-        else:
-            print('Stop download.')
-            exit(-1)
+#     def download(self):
+#         if decide_download(self.url):
+#             path = download_url(self.url, self.original_root)
+#             extract_zip(path, self.original_root)
+#             os.unlink(path)
+#         else:
+#             print('Stop download.')
+#             exit(-1)
 
-    def process(self):
-        data_df = pd.read_csv(osp.join(self.raw_dir, 'data.csv.gz'))
-        smiles_list = data_df['smiles']
-        homolumogap_list = data_df['homolumogap']
+#     def process(self):
+#         data_df = pd.read_csv(osp.join(self.raw_dir, 'data.csv.gz'))
+#         smiles_list = data_df['smiles']
+#         homolumogap_list = data_df['homolumogap']
 
-        print('Converting SMILES strings into graphs...')
-        data_list = []
-        for i in tqdm(range(len(smiles_list))):
-            data = Data()
+#         print('Converting SMILES strings into graphs...')
+#         data_list = []
+#         for i in tqdm(range(len(smiles_list))):
+#             data = Data()
 
-            smiles = smiles_list[i]
-            homolumogap = homolumogap_list[i]
-            graph = self.smiles2graph(smiles)
+#             smiles = smiles_list[i]
+#             homolumogap = homolumogap_list[i]
+#             graph = self.smiles2graph(smiles)
 
-            assert (len(graph['edge_feat']) == graph['edge_index'].shape[1])
-            assert (len(graph['node_feat']) == graph['num_nodes'])
+#             assert (len(graph['edge_feat']) == graph['edge_index'].shape[1])
+#             assert (len(graph['node_feat']) == graph['num_nodes'])
 
-            data.__num_nodes__ = int(graph['num_nodes'])
-            data.edge_index = torch.from_numpy(graph['edge_index']).to(torch.int64)
-            data.edge_attr = torch.from_numpy(graph['edge_feat']).to(torch.int64)
-            data.x = torch.from_numpy(graph['node_feat']).to(torch.int64)
-            data.y = torch.Tensor([homolumogap])
+#             data.__num_nodes__ = int(graph['num_nodes'])
+#             data.edge_index = torch.from_numpy(graph['edge_index']).to(torch.int64)
+#             data.edge_attr = torch.from_numpy(graph['edge_feat']).to(torch.int64)
+#             data.x = torch.from_numpy(graph['node_feat']).to(torch.int64)
+#             data.y = torch.Tensor([homolumogap])
 
-            data_list.append(data)
+#             data_list.append(data)
 
-        # double-check prediction target
-        split_dict = self.get_idx_split()
-        assert (all([not torch.isnan(data_list[i].y)[0] for i in split_dict['train']]))
-        assert (all([not torch.isnan(data_list[i].y)[0] for i in split_dict['valid']]))
-        assert (all([torch.isnan(data_list[i].y)[0] for i in split_dict['test-dev']]))
-        assert (all([torch.isnan(data_list[i].y)[0] for i in split_dict['test-challenge']]))
+#         # double-check prediction target
+#         split_dict = self.get_idx_split()
+#         assert (all([not torch.isnan(data_list[i].y)[0] for i in split_dict['train']]))
+#         assert (all([not torch.isnan(data_list[i].y)[0] for i in split_dict['valid']]))
+#         assert (all([torch.isnan(data_list[i].y)[0] for i in split_dict['test-dev']]))
+#         assert (all([torch.isnan(data_list[i].y)[0] for i in split_dict['test-challenge']]))
 
-        if self.pre_transform is not None:
-            data_list = [self.pre_transform(data) for data in data_list]
+#         if self.pre_transform is not None:
+#             data_list = [self.pre_transform(data) for data in data_list]
 
-        data, slices = self.collate(data_list)
+#         data, slices = self.collate(data_list)
 
-        print('Saving...')
-        torch.save((data, slices), self.processed_paths[0])
+#         print('Saving...')
+#         torch.save((data, slices), self.processed_paths[0])
 
-    def get_idx_split(self):
-        split_dict = replace_numpy_with_torchtensor(torch.load(osp.join(self.root, 'split_dict.pt')))
-        return split_dict
+#     def get_idx_split(self):
+#         split_dict = replace_numpy_with_torchtensor(torch.load(osp.join(self.root, 'split_dict.pt')))
+#         return split_dict
 
 
-if __name__ == '__main__':
-    dataset = PygPCQM4Mv2Dataset()
-    print(dataset)
-    print(dataset.data.edge_index)
-    print(dataset.data.edge_index.shape)
-    print(dataset.data.x.shape)
-    print(dataset[100])
-    print(dataset[100].y)
-    print(dataset.get_idx_split())
+# if __name__ == '__main__':
+#     dataset = PygPCQM4Mv2Dataset()
+#     print(dataset)
+#     print(dataset.data.edge_index)
+#     print(dataset.data.edge_index.shape)
+#     print(dataset.data.x.shape)
+#     print(dataset[100])
+#     print(dataset[100].y)
+#     print(dataset.get_idx_split())
 
-    ctr = Counter()
+#     ctr = Counter()
 
-    for i in range(len(dataset)):
-        g = dataset[i]
-        ctr[g.x.size(0)] += 1
+#     for i in range(len(dataset)):
+#         g = dataset[i]
+#         ctr[g.x.size(0)] += 1
 
-    pprint (ctr)
-    print ()
-    pprint (dict(ctr))
+#     pprint (ctr)
+#     print ()
+#     pprint (dict(ctr))
+
+import matplotlib.pyplot as plt
+import matplotlib
+
+font = {'family' : 'normal',
+        'size'   : 17}
+
+matplotlib.rc('font', **font)
+
+data = {
+    1: 162,
+    2: 445,
+    3: 961,
+    4: 2412,
+    5: 5662,
+    6: 13685,
+    7: 29458,
+    8: 58075,
+    9: 100641,
+    10: 158756,
+    11: 224141,
+    12: 301161,
+    13: 401582,
+    14: 541191,
+    15: 615160,
+    16: 636261,
+    17: 547839,
+    18: 74679,
+    19: 6260,
+    20: 11779,
+    21: 4236,
+    22: 3530,
+    23: 2254,
+    24: 1735,
+    25: 1188,
+    26: 854,
+    27: 623,
+    28: 605,
+    29: 443,
+    30: 323,
+    31: 157,
+    32: 98,
+    33: 58,
+    34: 47,
+    35: 25,
+    36: 11,
+    37: 4,
+    38: 3,
+    39: 11,
+    40: 28,
+    41: 23,
+    42: 20,
+    43: 10,
+    44: 12,
+    45: 3,
+    46: 2,
+    48: 3,
+    49: 1,
+    50: 1,
+    51: 2
+}
+
+size_buckets = list(data.keys())
+size_bucket_counts = list(data.values())
+
+print ("average graph size: ", sum(size_buckets) / len(size_buckets))
+
+plt.bar(size_buckets, size_bucket_counts)
+plt.xlabel("Graph size buckets")
+plt.ylabel("Total graphs per bucket")
+plt.show()

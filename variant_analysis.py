@@ -35,11 +35,11 @@ LARGE_PERFORMER_PATH_TRAIN = "/Users/rish/Desktop/UROP/gt-scaling/results/varian
 LARGE_BIGBIRD_PATH_TRAIN = "/Users/rish/Desktop/UROP/gt-scaling/results/variants/pcqm4m-subset-GPSlarge-RWSE-LapPE-BigBird/agg/train/best.json"
 
 transformer_paths_test = [SMALL_TRANSFORMER_PATH_TEST, MEDIUM_TRANSFORMER_PATH_TEST, LARGE_TRANSFORMER_PATH_TEST]
-performer_paths_test = [SMALL_PERFORMER_PATH_TEST, MEDIUM_PERFORMER_PATH_TEST] # large performer data missing
+performer_paths_test = [SMALL_PERFORMER_PATH_TEST, MEDIUM_PERFORMER_PATH_TEST, LARGE_PERFORMER_PATH_TEST]
 bigbird_paths_test = [SMALL_BIGBIRD_PATH_TEST, MEDIUM_BIGBIRD_PATH_TEST, LARGE_BIGBIRD_PATH_TEST]
 
 transformer_paths_train = [SMALL_TRANSFORMER_PATH_TRAIN, MEDIUM_TRANSFORMER_PATH_TRAIN, LARGE_TRANSFORMER_PATH_TRAIN]
-performer_paths_train = [SMALL_PERFORMER_PATH_TRAIN, MEDIUM_PERFORMER_PATH_TRAIN] # large performer data missing
+performer_paths_train = [SMALL_PERFORMER_PATH_TRAIN, MEDIUM_PERFORMER_PATH_TRAIN, LARGE_PERFORMER_PATH_TRAIN]
 bigbird_paths_train = [SMALL_BIGBIRD_PATH_TRAIN, MEDIUM_BIGBIRD_PATH_TRAIN, LARGE_BIGBIRD_PATH_TRAIN]
 
 # ---------------------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ for i, xy in enumerate(zip(transformer_time, transformer_mae)):
     ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
 ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="green")
 for i, xy in enumerate(zip(performer_time, performer_mae)):
-    ax.annotate(f'BB-{classes[i]}', xy=xy, textcoords='data')
+    ax.annotate(f'Pf-{classes[i]}', xy=xy, textcoords='data')
 
 ax.grid()
 plt.xlabel("Inference Time (s)")

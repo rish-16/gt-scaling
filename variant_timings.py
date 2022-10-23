@@ -36,7 +36,7 @@ LARGE_BIGBIRD_PATH_TRAIN = "/Users/rish/Desktop/UROP/gt-scaling/results/variants
 # transformer, performer, bigbird
 SMALL_PATHS = [SMALL_TRANSFORMER_PATH_TEST, SMALL_PERFORMER_PATH_TEST, SMALL_BIGBIRD_PATH_TEST]
 MEDIUM_PATHS = [MEDIUM_TRANSFORMER_PATH_TEST, MEDIUM_PERFORMER_PATH_TEST, MEDIUM_BIGBIRD_PATH_TEST]
-LARGE_PATHS = [LARGE_TRANSFORMER_PATH_TEST, "", LARGE_BIGBIRD_PATH_TEST]
+LARGE_PATHS = [LARGE_TRANSFORMER_PATH_TEST, LARGE_PERFORMER_PATH_TEST, LARGE_BIGBIRD_PATH_TEST]
 classes = ["S", "M", "L"]
 
 labels = ['Transformer', 'Performer', 'BigBird']
@@ -83,9 +83,9 @@ df = pd.DataFrame([
     ['L','Transformer', large_times[0]],
     ['L','Performer', large_times[1]],
     ['L','BigBird', large_times[2]]
-], columns=['Scale','Model', 'val'])
+], columns=['Scale','Models', 'val'])
 
-df.pivot("Model", "Scale", "val").plot(kind='bar')
+df.pivot("Models", "Scale", "val").plot(kind='bar')
 
 plt.title("PCQM4Mv2-Subset Test Inference Times")
 plt.xticks(rotation = 0)
