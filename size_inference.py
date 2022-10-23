@@ -4,8 +4,11 @@ import shutil
 from ogb.utils import smiles2graph
 from ogb.utils.torch_util import replace_numpy_with_torchtensor
 from ogb.utils.url import decide_download, download_url, extract_zip
+
+from torch_geometric.graphgym.cmd_args import parse_args
 from torch_geometric.graphgym.config import (cfg, dump_cfg, set_agg_dir, set_cfg, load_cfg, makedirs_rm_exist)
 from torch_geometric.graphgym.model_builder import create_model
+
 import pandas as pd
 from tqdm import tqdm
 import torch
@@ -172,6 +175,7 @@ if __name__ == '__main__':
 
     pprint (batches)
 
+    args = parse_args()
     set_cfg(cfg)
     load_cfg(cfg, args)
     # Set Pytorch environment
