@@ -244,4 +244,5 @@ if __name__ == '__main__':
         #     cfg = load_pretrained_model_cfg(cfg)
 
         model = create_model()
-
+        
+        print (model)
