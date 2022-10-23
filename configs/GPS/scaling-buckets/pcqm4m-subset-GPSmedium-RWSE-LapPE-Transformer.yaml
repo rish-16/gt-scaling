@@ -67,5 +67,3 @@ optim:
   max_epoch: 150
   scheduler: cosine_with_warmup
   num_warmup_epochs: 10
-pretrained:
-  dir: "../../results/pcqm4m-subset-GPSmedium-RWSE-LapPE-Transformer/0/ckpt/149.ckpt"

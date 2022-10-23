@@ -178,6 +178,8 @@ if __name__ == '__main__':
     args = parse_args()
     set_cfg(cfg)
     load_cfg(cfg, args)
+    # custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
+    dump_cfg(cfg)
     # Set Pytorch environment
     torch.set_num_threads(cfg.num_threads)
     gpu_dev = str(input("Enter GPU device: "))
@@ -194,7 +196,9 @@ if __name__ == '__main__':
         # auto_select_device()
         cfg.device = f'cuda:{gpu_dev}'
 
-        if cfg.pretrained.dir:
-            cfg = load_pretrained_model_cfg(cfg)
+        # if cfg.pretrained.dir:
+        #     cfg = load_pretrained_model_cfg(cfg)
 
         model = create_model()
+
+        
