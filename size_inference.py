@@ -186,6 +186,7 @@ def custom_set_run_dir(cfg, run_id):
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
+    dataset = dataset[:10000]
     # print(dataset)
     # print(dataset.data.edge_index)
     # print(dataset.data.edge_index.shape)
