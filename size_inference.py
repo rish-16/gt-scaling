@@ -211,6 +211,7 @@ if __name__ == '__main__':
     # truncate to only single batch size
     for sb, graphs in container.items():
         container[sb] = graphs[:B]
+
         batch = pyg.data.Batch.from_data_list(container[sb])
         batches.append(batch)
 
@@ -240,13 +241,15 @@ if __name__ == '__main__':
         # auto_select_device()
         cfg.device = f'cuda:{gpu_dev}'
 
-        logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
-                     f"split_index={cfg.dataset.split_index}")
-        logging.info(f"    Starting now: {datetime.datetime.now()}")
+        # logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
+        #              f"split_index={cfg.dataset.split_index}")
+        # logging.info(f"    Starting now: {datetime.datetime.now()}")
         
-        loaders = create_loader()
-        loggers = create_logger()
+        # loaders = create_loader()
+        # loggers = create_logger()
         model = create_model()
+
+        print (model)
 
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
