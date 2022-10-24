@@ -186,7 +186,6 @@ def custom_set_run_dir(cfg, run_id):
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
-    dataset = dataset[:1000]
     # print(dataset)
     # print(dataset.data.edge_index)
     # print(dataset.data.edge_index.shape)
@@ -256,6 +255,7 @@ if __name__ == '__main__':
             time_taken = end_time - start_time
 
             cur_N = cur_batch[0].x.size(0)
+            print (cur_N)
             size_times[cur_N] = time_taken / len(cur_batch)
 
         pprint (size_times)
