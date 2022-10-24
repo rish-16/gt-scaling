@@ -240,10 +240,16 @@ if __name__ == '__main__':
         # auto_select_device()
         cfg.device = f'cuda:{gpu_dev}'
 
-        # if cfg.pretrained.dir:
-        #     cfg = load_pretrained_model_cfg(cfg)
-
+        logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
+                     f"split_index={cfg.dataset.split_index}")
+        logging.info(f"    Starting now: {datetime.datetime.now()}")
+        
+        loaders = create_loader()
+        loggers = create_logger()
         model = create_model()
+
+        cfg.params = params_count(model)
+        logging.info('Num parameters: %s', cfg.params)
 
         # iterature through size classes
         size_times = {}
