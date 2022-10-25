@@ -231,7 +231,7 @@ if __name__ == '__main__':
     # truncate to only single batch size
     for sb, graphs in container.items():
         container[sb] = graphs[:B]
-
+        print ("length:", len(container[sb]))
         batch = pyg.data.Batch.from_data_list(container[sb])
         batches.append(batch)
 
