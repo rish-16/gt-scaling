@@ -193,6 +193,7 @@ def PREPROCESS_BATCH(batch, emb_dim, dim_emb1, dim_emb2, cfg):
     """
     add lappe + rwse + atomencoder
     """
+    cfg.posenc_RWSE.kernel.times = cfg.posenc_RWSE.kernel.times_func
     batch = compute_posenc_stats(batch, ["LapPE", "RWSE"], True, cfg)
     batch = AtomEncoder(emb_dim - dim_emb1 - dim_emb2)(batch)
     batch = LapPENodeEncoder(emb_dim - dim_emb2)(batch)
