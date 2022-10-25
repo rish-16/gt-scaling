@@ -221,7 +221,7 @@ if __name__ == '__main__':
     for i in range(len(dataset)):
         g = dataset[i]
         N = g.x.size(0)
-        if N <= 31 and N > 1:
+        if N <= 31 and N >= 1:
             if N in container.keys():
                 container[N].append(g)
             else:
@@ -231,7 +231,7 @@ if __name__ == '__main__':
     # truncate to only single batch size
     for sb, graphs in container.items():
         container[sb] = graphs[:B]
-        print ("length:", len(container[sb]))
+        print ("N:", sb, "length:", len(container[sb]))
         batch = pyg.data.Batch.from_data_list(container[sb])
         batches.append(batch)
 
@@ -246,7 +246,7 @@ if __name__ == '__main__':
     
     # Set Pytorch environment
     torch.set_num_threads(cfg.num_threads)
-    gpu_dev = str(input("Enter GPU device: "))
+    # gpu_dev = str(input("Enter GPU device: "))
 
     # Repeat for multiple experiment runs
     for run_id, seed, split_index in zip(*run_loop_settings()):
@@ -259,7 +259,8 @@ if __name__ == '__main__':
         seed_everything(cfg.seed)
         
         # auto_select_device()
-        DEVICE = f'cuda:{gpu_dev}'
+        # DEVICE = f'cuda:{gpu_dev}'
+        DEVICE = f'cuda:0'
         cfg.device = DEVICE
 
         # logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
