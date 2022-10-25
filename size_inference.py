@@ -284,12 +284,13 @@ if __name__ == '__main__':
             cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
             cur_batch = cur_batch.to(DEVICE)
+            print (cur_batch)
             y1 = model(cur_batch)
             end_time = time.time()
             time_taken = end_time - start_time
 
             cur_N = cur_batch[0].x.size(0)
-            print (cur_N)
+            print ("Current bucket size: ", cur_N)
             size_times[cur_N] = time_taken / len(cur_batch)
 
         pprint (size_times)
