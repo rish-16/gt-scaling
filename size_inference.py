@@ -259,7 +259,8 @@ if __name__ == '__main__':
         seed_everything(cfg.seed)
         
         # auto_select_device()
-        cfg.device = f'cuda:{gpu_dev}'
+        DEVICE = f'cuda:{gpu_dev}'
+        cfg.device = DEVICE
 
         # logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
         #              f"split_index={cfg.dataset.split_index}")
@@ -282,7 +283,7 @@ if __name__ == '__main__':
 
             cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
-            cur_batch = cur_batch.to(model.device)
+            cur_batch = cur_batch.to(DEVICE)
             y1 = model(cur_batch)
             end_time = time.time()
             time_taken = end_time - start_time
