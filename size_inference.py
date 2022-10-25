@@ -215,7 +215,7 @@ if __name__ == '__main__':
     # print(dataset[100].y)
     # print(dataset.get_idx_split())
 
-    B = 128
+    B = 256
     container = {}
 
     for i in range(len(dataset)):
@@ -290,7 +290,7 @@ if __name__ == '__main__':
             time_taken = end_time - start_time
 
             cur_N = cur_batch[0].x.size(0)
-            print ("Current bucket size: ", cur_N)
+            print ("Current bucket size: ", cur_N, len(cur_batch))
             size_times[cur_N] = time_taken / len(cur_batch)
 
         pprint (size_times)
