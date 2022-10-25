@@ -89,7 +89,7 @@ class KernelPENodeEncoder(torch.nn.Module):
         pos_enc = self.pe_encoder(pos_enc)  # (Num nodes) x dim_pe
 
         # Expand node features if needed
-        if self.expand_x:
+        if not self.expand_x:
             h = self.linear_x(batch.x)
         else:
             h = batch.x
