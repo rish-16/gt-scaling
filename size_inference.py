@@ -284,7 +284,7 @@ if __name__ == '__main__':
             cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
             cur_batch = cur_batch.to(DEVICE)
-            print (cur_batch)
+            print ("Current batch: ", cur_batch)
             y1 = model(cur_batch)
             end_time = time.time()
             time_taken = end_time - start_time

@@ -130,7 +130,7 @@ class LapPENodeEncoder(torch.nn.Module):
             pos_enc = self.post_mlp(pos_enc)  # (Num nodes) x dim_pe
 
         # Expand node features if needed
-        if not self.expand_x:
+        if self.expand_x:
             h = self.linear_x(batch.x)
         else:
             h = batch.x
