@@ -282,6 +282,7 @@ if __name__ == '__main__':
         for bi in range(len(batches)):
             start_time = time.time()
             cur_batch = iter(batches[bi])
+            print (cur_batch)
 
             cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
