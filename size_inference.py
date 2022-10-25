@@ -285,6 +285,7 @@ if __name__ == '__main__':
 
             cur_batch = cur_batch.to(DEVICE)
             print ("Current batch: ", cur_batch)
+            print ("Current batch size: ", len(cur_batch))
             y1 = model(cur_batch)
             end_time = time.time()
             time_taken = end_time - start_time
