@@ -189,14 +189,14 @@ def custom_set_run_dir(cfg, run_id):
     else:
         makedirs_rm_exist(cfg.run_dir)    
 
-def PREPROCESS_BATCH(batch, emb_dim, dim_emb):
+def PREPROCESS_BATCH(batch, emb_dim, dim_emb1, dim_emb2, cfg):
     """
     add lappe + rwse + atomencoder
     """
-    batch = compute_posenc_stats(batch, ["LapPE", "RWSE"])
-    batch = AtomEncoder(emb_dim)(batch)
-    batch = LapPENodeEncoder(dim_emb)(batch)
-    batch = RWSENodeEncoder(dim_emb)(batch)
+    batch = compute_posenc_stats(batch, ["LapPE", "RWSE"], True, cfg)
+    batch = AtomEncoder(emb_dim - dim_emb1 - dim_emb2)(batch)
+    batch = LapPENodeEncoder(emb_dim - dim_emb2)(batch)
+    batch = RWSENodeEncoder(emb_dim)(batch)
     return batch
 
 if __name__ == '__main__':
@@ -275,7 +275,7 @@ if __name__ == '__main__':
             start_time = time.time()
             cur_batch = batches[bi]
 
-            cur_batch = PREPROCESS_BATCH(cur_batch)
+            cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
             cur_batch = cur_batch.cuda()
             y1 = model(cur_batch)
