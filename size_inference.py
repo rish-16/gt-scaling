@@ -232,7 +232,8 @@ if __name__ == '__main__':
     for sb, graphs in container.items():
         container[sb] = graphs[:B]
         print ("N:", sb, "length:", len(container[sb]))
-        batch = pyg.data.Batch.from_data_list(container[sb])
+        # batch = pyg.data.Batch.from_data_list(container[sb])
+        dl = pyg.loader.DataLoader(container[sb])
         batches.append(batch)
 
     # pprint (batches)
@@ -271,7 +272,7 @@ if __name__ == '__main__':
         # loggers = create_logger()
         model = create_model()
 
-        print (model)
+        # print (model)
 
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
