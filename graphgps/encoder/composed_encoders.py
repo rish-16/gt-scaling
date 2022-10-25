@@ -87,9 +87,9 @@ def concat_node_encoders(encoder_classes, pe_enc_names):
             # PE dims can only be gathered once the cfg is loaded.
             enc2_dim_pe = getattr(cfg, f"posenc_{self.enc2_name}").dim_pe
             enc3_dim_pe = getattr(cfg, f"posenc_{self.enc3_name}").dim_pe
-            self.encoder1 = self.enc1_cls(dim_emb - enc2_dim_pe - enc3_dim_pe)
-            self.encoder2 = self.enc2_cls(dim_emb - enc3_dim_pe, expand_x=False)
-            self.encoder3 = self.enc3_cls(dim_emb, expand_x=False)
+            self.encoder1 = self.enc1_cls(dim_emb - enc2_dim_pe - enc3_dim_pe) # atom
+            self.encoder2 = self.enc2_cls(dim_emb - enc3_dim_pe, expand_x=False) # lap
+            self.encoder3 = self.enc3_cls(dim_emb, expand_x=False) # rwse
 
         def forward(self, batch):
             batch = self.encoder1(batch)
