@@ -209,7 +209,7 @@ if __name__ == '__main__':
     # print(dataset.get_idx_split())
 
     B = 256
-    container = []
+    container = {}
 
     for i in range(len(dataset)):
         g = dataset[i]
