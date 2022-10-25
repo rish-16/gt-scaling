@@ -274,7 +274,7 @@ if __name__ == '__main__':
         size_times = {}
         for bi in range(len(batches)):
             start_time = time.time()
-            for i, cur_batch in enumerate(batches[bi]):
+            for i, cur_batch in enumerate(batches[bi][0]):
                 print (cur_batch)
                 cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
                 cur_batch.split = "train"
