@@ -195,18 +195,11 @@ def PREPROCESS_BATCH(batch, emb_dim, dim_emb1, dim_emb2, cfg):
     """
     cfg.posenc_RWSE.kernel.times = list(eval(cfg.posenc_RWSE.kernel.times_func))
     batch = compute_posenc_stats(batch, ["LapPE", "RWSE"], True, cfg)
-    # print ("after compute", batch)
-    # batch = AtomEncoder(emb_dim - dim_emb1 - dim_emb2)(batch)
-    # print ("after atom", batch)
-    # batch = LapPENodeEncoder(emb_dim - dim_emb2)(batch)
-    # print ("after lap", batch)
-    # batch = RWSENodeEncoder(emb_dim)(batch)
-    # print ("after rwse", batch)
     return batch
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
-    dataset = dataset[:10000]
+    dataset = dataset[:50000]
     # print(dataset)
     # print(dataset.data.edge_index)
     # print(dataset.data.edge_index.shape)
@@ -216,7 +209,7 @@ if __name__ == '__main__':
     # print(dataset.get_idx_split())
 
     B = 256
-    container = {}
+    container = []
 
     for i in range(len(dataset)):
         g = dataset[i]
@@ -232,8 +225,8 @@ if __name__ == '__main__':
     for sb, graphs in container.items():
         container[sb] = graphs[:B]
         print ("N:", sb, "length:", len(container[sb]))
-        # batch = pyg.data.Batch.from_data_list(container[sb])
-        dl = pyg.loader.DataLoader(container[sb], batch_size=B)
+        batch = pyg.data.Batch.from_data_list(container[sb])
+        dl = pyg.loader.DataLoader(batch, batch_size=B)
         batches.append(dl)
 
     pprint (batches)
@@ -283,8 +276,8 @@ if __name__ == '__main__':
             start_time = time.time()
             for i, cur_batch in enumerate(batches[bi]):
                 print (cur_batch)
-
                 cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
+                cur_batch.split = "train"
 
                 cur_batch = cur_batch.to(DEVICE)
                 print ("Current batch: ", cur_batch)
@@ -295,6 +288,6 @@ if __name__ == '__main__':
 
                 cur_N = cur_batch[0].x.size(0)
                 print ("Current bucket size: ", cur_N, len(cur_batch))
-                size_times[cur_N] = time_taken / len(cur_batch)
+                size_times[cur_N] = time_taken
 
         pprint (size_times)
