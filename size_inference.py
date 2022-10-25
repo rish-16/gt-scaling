@@ -22,6 +22,11 @@ from torch_geometric.graphgym.register import train_dict
 from torch_geometric.graphgym.loss import compute_loss
 from torch_geometric import seed_everything
 
+from graphgps.encoder.laplace_pos_encoder import LapPENodeEncoder
+from graphgps.encoder.kernel_pos_encoder import RWSENodeEncoder
+from torch_geometric.graphgym.models.encoder import AtomEncoder
+from graphgps.transform.posenc_stats import compute_posenc_stats
+
 from graphgps.finetuning import load_pretrained_model_cfg, init_model_from_pretrained
 from graphgps.logger import create_logger
 
@@ -184,6 +189,16 @@ def custom_set_run_dir(cfg, run_id):
     else:
         makedirs_rm_exist(cfg.run_dir)    
 
+def PREPROCESS_BATCH(batch, emb_dim, dim_emb):
+    """
+    add lappe + rwse + atomencoder
+    """
+    batch = compute_posenc_stats(batch, ["LapPE", "RWSE"])
+    batch = AtomEncoder(emb_dim)(batch)
+    batch = LapPENodeEncoder(dim_emb)(batch)
+    batch = RWSENodeEncoder(dim_emb)(batch)
+    return batch
+
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
     dataset = dataset[:10000]
@@ -259,6 +274,9 @@ if __name__ == '__main__':
         for bi in range(len(batches)):
             start_time = time.time()
             cur_batch = batches[bi]
+
+            cur_batch = PREPROCESS_BATCH(cur_batch)
+
             cur_batch = cur_batch.cuda()
             y1 = model(cur_batch)
             end_time = time.time()
