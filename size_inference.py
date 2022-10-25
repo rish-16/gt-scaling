@@ -233,10 +233,10 @@ if __name__ == '__main__':
         container[sb] = graphs[:B]
         print ("N:", sb, "length:", len(container[sb]))
         # batch = pyg.data.Batch.from_data_list(container[sb])
-        dl = pyg.loader.DataLoader(container[sb])
-        batches.append(batch)
+        dl = pyg.loader.DataLoader(container[sb], batch_size=B)
+        batches.append(dl)
 
-    # pprint (batches)
+    pprint (batches)
 
     args = parse_args()
 
@@ -281,7 +281,7 @@ if __name__ == '__main__':
         size_times = {}
         for bi in range(len(batches)):
             start_time = time.time()
-            cur_batch = batches[bi]
+            cur_batch = iter(batches[bi])
 
             cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
