@@ -281,20 +281,20 @@ if __name__ == '__main__':
         size_times = {}
         for bi in range(len(batches)):
             start_time = time.time()
-            cur_batch = iter(batches[bi])
-            print (cur_batch)
+            for i, cur_batch in enumerate(batches[bi]):
+                print (cur_batch)
 
-            cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
+                cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
 
-            cur_batch = cur_batch.to(DEVICE)
-            print ("Current batch: ", cur_batch)
-            print ("Current batch size: ", len(cur_batch))
-            y1 = model(cur_batch)
-            end_time = time.time()
-            time_taken = end_time - start_time
+                cur_batch = cur_batch.to(DEVICE)
+                print ("Current batch: ", cur_batch)
+                print ("Current batch size: ", len(cur_batch))
+                y1 = model(cur_batch)
+                end_time = time.time()
+                time_taken = end_time - start_time
 
-            cur_N = cur_batch[0].x.size(0)
-            print ("Current bucket size: ", cur_N, len(cur_batch))
-            size_times[cur_N] = time_taken / len(cur_batch)
+                cur_N = cur_batch[0].x.size(0)
+                print ("Current bucket size: ", cur_N, len(cur_batch))
+                size_times[cur_N] = time_taken / len(cur_batch)
 
         pprint (size_times)
