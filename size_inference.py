@@ -325,13 +325,16 @@ if __name__ == '__main__':
 
         per_size_batches = {}
         for i, data_batch in enumerate(train_loader):
-            print (data_batch)
-            samples = data_batch.to_data_list()
-            print (samples)
-            # print (data_batch.x.size())
-            # print (data_batch.x.size())
-            # print (data_batch.x.size())
-            break
+            sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
+            n_nodes = sample.x.size(0)
+            if n_nodes in per_size_batches:
+                per_size_batches[n_nodes].append(sample)
+            else:
+                per_size_batches[n_nodes] = [sample]
+
+        pprint (list(per_size_batches.keys()))
+        for n_nodes, samples in per_size_batches.items():
+            print (n_nodes, len(samples))
 
         # # iterature through size classes
         # size_times = {}
