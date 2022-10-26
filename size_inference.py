@@ -305,7 +305,15 @@ if __name__ == '__main__':
         cfg.run_id = run_id
         seed_everything(cfg.seed)
         
+        # auto_select_device()
         cfg.device = f'cuda:0'
+
+        if cfg.pretrained.dir:
+            cfg = load_pretrained_model_cfg(cfg)
+
+        logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
+                     f"split_index={cfg.dataset.split_index}")
+        logging.info(f"    Starting now: {datetime.datetime.now()}")
 
         loaders = create_loader()
         train_loader = loaders[0]
