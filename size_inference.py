@@ -319,7 +319,9 @@ if __name__ == '__main__':
         for i, batch in enumerate(train_loader):
             data_batch = batch[0]
             print (data_batch)
-            print (data_batch.x.size())
+            print (data_batch[0].x.size())
+            print (data_batch[1].x.size())
+            print (data_batch[2].x.size())
             break
 
         # # iterature through size classes
