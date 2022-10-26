@@ -252,17 +252,9 @@ if __name__ == '__main__':
         cfg.run_id = run_id
         seed_everything(cfg.seed)
         
-        # auto_select_device()
-        # DEVICE = f'cuda:{gpu_dev}'
         DEVICE = f'cuda:0'
         cfg.device = DEVICE
 
-        # logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
-        #              f"split_index={cfg.dataset.split_index}")
-        # logging.info(f"    Starting now: {datetime.datetime.now()}")
-        
-        # loaders = create_loader()
-        # loggers = create_logger()
         model = create_model()
 
         # print (model)
