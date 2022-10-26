@@ -336,6 +336,9 @@ if __name__ == '__main__':
         pprint (list(per_size_batches.keys()))
         for n_nodes, samples in per_size_batches.items():
             print (n_nodes, len(samples))
+            print (samples)
+            print ()
+            print ()
 
         # # iterature through size classes
         # size_times = {}
