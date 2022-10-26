@@ -335,29 +335,22 @@ if __name__ == '__main__':
 
         pprint (list(per_size_batches.keys()))
         for n_nodes, samples in per_size_batches.items():
-            print (n_nodes, len(samples))
-            print (samples)
-            print ()
-            print ()
+            per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(per_size_batches[n_nodes])
+        
+        print (per_size_batches)
 
-        # # iterature through size classes
-        # size_times = {}
-        # for bi in range(len(batches)):
-        #     start_time = time.time()
-        #     for i, cur_batch in enumerate(batches[bi]):
-        #         print (cur_batch)
-        #         cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
-        #         cur_batch.split = "train"
+        size_times = {}
+        for n_nodes, cur_batch in per_size_batches.items():
+            start_time = time.time()
+            cur_batch = cur_batch.to(DEVICE)
+            print ("Current batch: ", cur_batch)
+            print ("Current batch size: ", len(cur_batch))
+            y1 = model(cur_batch)
+            end_time = time.time()
+            time_taken = end_time - start_time
 
-        #         cur_batch = cur_batch.to(DEVICE)
-        #         print ("Current batch: ", cur_batch)
-        #         print ("Current batch size: ", len(cur_batch))
-        #         y1 = model(cur_batch)
-        #         end_time = time.time()
-        #         time_taken = end_time - start_time
+            cur_N = cur_batch[0].x.size(0)
+            print ("Current bucket size: ", cur_N, len(cur_batch))
+            size_times[cur_N] = time_taken
 
-        #         cur_N = cur_batch[0].x.size(0)
-        #         print ("Current bucket size: ", cur_N, len(cur_batch))
-        #         size_times[cur_N] = time_taken
-
-        # pprint (size_times)
+        pprint (size_times)
