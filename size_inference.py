@@ -306,9 +306,10 @@ if __name__ == '__main__':
         seed_everything(cfg.seed)
         
         # auto_select_device()
-
+        BS = 256
         DEVICE = f'cuda:0'
         cfg.device = DEVICE
+
 
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
@@ -336,12 +337,14 @@ if __name__ == '__main__':
                 per_size_batches[n_nodes] = [sample]
 
         pprint (list(per_size_batches.keys()))
+        size_times = {}
         for n_nodes, samples in per_size_batches.items():
-            per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(per_size_batches[n_nodes])
+            per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
+            size_times[n_nodes] = [len(samples)]
         
         print (per_size_batches)
+        print (size_times)
 
-        size_times = {}
         for n_nodes, cur_batch in per_size_batches.items():
             start_time = time.time()
             cur_batch = cur_batch.to(DEVICE)
@@ -353,6 +356,8 @@ if __name__ == '__main__':
 
             cur_N = cur_batch[0].x.size(0)
             print ("Current bucket size: ", cur_N, len(cur_batch))
-            size_times[cur_N] = time_taken
+            new_entry = [size_times[cur_N][0], time_taken]
+            size_times[cur_N] = new_entry
 
+        print ("FINAL\n")
         pprint (size_times)
