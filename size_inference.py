@@ -324,10 +324,9 @@ if __name__ == '__main__':
         logging.info('Num parameters: %s', cfg.params)
 
         per_size_batches = {}
-        for i, batch in enumerate(train_loader):
-            data_batch = batch[0]
-            samples = data_batch.to_data_list()
+        for i, data_batch in enumerate(train_loader):
             print (data_batch)
+            samples = data_batch.to_data_list()
             print (samples)
             # print (data_batch.x.size())
             # print (data_batch.x.size())
