@@ -326,10 +326,12 @@ if __name__ == '__main__':
         per_size_batches = {}
         for i, batch in enumerate(train_loader):
             data_batch = batch[0]
+            samples = data_batch.to_data_list()
             print (data_batch)
-            print (data_batch[0].x.size())
-            print (data_batch[1].x.size())
-            print (data_batch[2].x.size())
+            print (samples)
+            # print (data_batch.x.size())
+            # print (data_batch.x.size())
+            # print (data_batch.x.size())
             break
 
         # # iterature through size classes
