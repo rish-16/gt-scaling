@@ -197,51 +197,104 @@ def PREPROCESS_BATCH(batch, emb_dim, dim_emb1, dim_emb2, cfg):
     batch = compute_posenc_stats(batch, ["LapPE", "RWSE"], True, cfg)
     return batch
 
+# if __name__ == '__main__':
+#     dataset = PygPCQM4Mv2Dataset()
+#     dataset = dataset[:50000]
+#     # print(dataset)
+#     # print(dataset.data.edge_index)
+#     # print(dataset.data.edge_index.shape)
+#     # print(dataset.data.x.shape)
+#     # print(dataset[100])
+#     # print(dataset[100].y)
+#     # print(dataset.get_idx_split())
+
+#     B = 256
+#     container = {}
+
+#     for i in range(len(dataset)):
+#         g = dataset[i]
+#         N = g.x.size(0)
+#         if N <= 31 and N >= 1:
+#             if N in container.keys():
+#                 container[N].append(g)
+#             else:
+#                 container[N] = [g]
+
+#     batches = []
+#     # truncate to only single batch size
+#     for sb, graphs in container.items():
+#         container[sb] = graphs[:B]
+#         print ("N:", sb, "length:", len(container[sb]))
+#         batch = pyg.data.Batch.from_data_list(container[sb])
+#         dl = pyg.loader.DataLoader(batch, batch_size=B)
+#         batches.append(dl)
+
+#     pprint (batches)
+
+#     args = parse_args()
+
+#     set_cfg(cfg)
+#     load_cfg(cfg, args)
+#     custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
+#     dump_cfg(cfg)
+    
+#     # Set Pytorch environment
+#     torch.set_num_threads(cfg.num_threads)
+#     # gpu_dev = str(input("Enter GPU device: "))
+
+#     # Repeat for multiple experiment runs
+#     for run_id, seed, split_index in zip(*run_loop_settings()):
+#         # Set configurations for each run
+#         custom_set_run_dir(cfg, run_id)
+#         set_printing()
+#         cfg.dataset.split_index = split_index
+#         cfg.seed = seed
+#         cfg.run_id = run_id
+#         seed_everything(cfg.seed)
+        
+#         DEVICE = f'cuda:0'
+#         cfg.device = DEVICE
+
+#         model = create_model()
+
+#         # print (model)
+
+#         cfg.params = params_count(model)
+#         logging.info('Num parameters: %s', cfg.params)
+
+        # # iterature through size classes
+        # size_times = {}
+        # for bi in range(len(batches)):
+        #     start_time = time.time()
+        #     for i, cur_batch in enumerate(batches[bi]):
+        #         print (cur_batch)
+        #         cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
+        #         cur_batch.split = "train"
+
+        #         cur_batch = cur_batch.to(DEVICE)
+        #         print ("Current batch: ", cur_batch)
+        #         print ("Current batch size: ", len(cur_batch))
+        #         y1 = model(cur_batch)
+        #         end_time = time.time()
+        #         time_taken = end_time - start_time
+
+        #         cur_N = cur_batch[0].x.size(0)
+        #         print ("Current bucket size: ", cur_N, len(cur_batch))
+        #         size_times[cur_N] = time_taken
+
+        # pprint (size_times)
+
 if __name__ == '__main__':
-    dataset = PygPCQM4Mv2Dataset()
-    dataset = dataset[:50000]
-    # print(dataset)
-    # print(dataset.data.edge_index)
-    # print(dataset.data.edge_index.shape)
-    # print(dataset.data.x.shape)
-    # print(dataset[100])
-    # print(dataset[100].y)
-    # print(dataset.get_idx_split())
-
-    B = 256
-    container = {}
-
-    for i in range(len(dataset)):
-        g = dataset[i]
-        N = g.x.size(0)
-        if N <= 31 and N >= 1:
-            if N in container.keys():
-                container[N].append(g)
-            else:
-                container[N] = [g]
-
-    batches = []
-    # truncate to only single batch size
-    for sb, graphs in container.items():
-        container[sb] = graphs[:B]
-        print ("N:", sb, "length:", len(container[sb]))
-        batch = pyg.data.Batch.from_data_list(container[sb])
-        dl = pyg.loader.DataLoader(batch, batch_size=B)
-        batches.append(dl)
-
-    pprint (batches)
-
+    # Load cmd line args
     args = parse_args()
-
+    # Load config file
     set_cfg(cfg)
     load_cfg(cfg, args)
     custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
     dump_cfg(cfg)
-    
     # Set Pytorch environment
     torch.set_num_threads(cfg.num_threads)
     # gpu_dev = str(input("Enter GPU device: "))
-
     # Repeat for multiple experiment runs
     for run_id, seed, split_index in zip(*run_loop_settings()):
         # Set configurations for each run
@@ -252,34 +305,41 @@ if __name__ == '__main__':
         cfg.run_id = run_id
         seed_everything(cfg.seed)
         
-        DEVICE = f'cuda:0'
-        cfg.device = DEVICE
+        cfg.device = f'cuda:0'
+
+        loaders = create_loader()
+        train_loader = loaders[0]
 
         model = create_model()
-
-        # print (model)
 
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
 
-        # iterature through size classes
-        size_times = {}
-        for bi in range(len(batches)):
-            start_time = time.time()
-            for i, cur_batch in enumerate(batches[bi]):
-                print (cur_batch)
-                cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
-                cur_batch.split = "train"
+        per_size_batches = {}
+        for i, batch in enumerate(train_loader):
+            data_batch = batch[0]
+            print (data_batch)
+            print (data_batch.x.size())
+            break
 
-                cur_batch = cur_batch.to(DEVICE)
-                print ("Current batch: ", cur_batch)
-                print ("Current batch size: ", len(cur_batch))
-                y1 = model(cur_batch)
-                end_time = time.time()
-                time_taken = end_time - start_time
+        # # iterature through size classes
+        # size_times = {}
+        # for bi in range(len(batches)):
+        #     start_time = time.time()
+        #     for i, cur_batch in enumerate(batches[bi]):
+        #         print (cur_batch)
+        #         cur_batch = PREPROCESS_BATCH(cur_batch, 384, 8, 20, cfg)
+        #         cur_batch.split = "train"
 
-                cur_N = cur_batch[0].x.size(0)
-                print ("Current bucket size: ", cur_N, len(cur_batch))
-                size_times[cur_N] = time_taken
+        #         cur_batch = cur_batch.to(DEVICE)
+        #         print ("Current batch: ", cur_batch)
+        #         print ("Current batch size: ", len(cur_batch))
+        #         y1 = model(cur_batch)
+        #         end_time = time.time()
+        #         time_taken = end_time - start_time
 
-        pprint (size_times)
+        #         cur_N = cur_batch[0].x.size(0)
+        #         print ("Current bucket size: ", cur_N, len(cur_batch))
+        #         size_times[cur_N] = time_taken
+
+        # pprint (size_times)

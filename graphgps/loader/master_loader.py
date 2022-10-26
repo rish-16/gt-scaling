@@ -8,8 +8,7 @@ import torch
 import torch_geometric.transforms as T
 from numpy.random import default_rng
 from ogb.graphproppred import PygGraphPropPredDataset
-from torch_geometric.datasets import (GNNBenchmarkDataset, Planetoid, TUDataset,
-                                      WikipediaNetwork, ZINC)
+from torch_geometric.datasets import (GNNBenchmarkDataset, Planetoid, TUDataset, WikipediaNetwork, ZINC)
 from torch_geometric.graphgym.config import cfg
 from torch_geometric.graphgym.loader import load_pyg, load_ogb, set_dataset_attr
 from torch_geometric.graphgym.register import register_loader
@@ -18,12 +17,9 @@ from graphgps.loader.dataset.aqsol_molecules import AQSOL
 from graphgps.loader.dataset.coco_superpixels import COCOSuperpixels
 from graphgps.loader.dataset.malnet_tiny import MalNetTiny
 from graphgps.loader.dataset.voc_superpixels import VOCSuperpixels
-from graphgps.loader.split_generator import (prepare_splits,
-                                             set_dataset_splits)
+from graphgps.loader.split_generator import (prepare_splits, set_dataset_splits)
 from graphgps.transform.posenc_stats import compute_posenc_stats
-from graphgps.transform.transforms import (pre_transform_in_memory,
-                                           typecast_x, concat_x_and_pos,
-                                           clip_graphs_to_size)
+from graphgps.transform.transforms import (pre_transform_in_memory, typecast_x, concat_x_and_pos, clip_graphs_to_size)
 
 
 def log_loaded_dataset(dataset, format, name):
@@ -397,7 +393,7 @@ def preformat_OGB_PCQM4Mv2(dataset_dir, name):
                       ]
     elif name == 'subset':
         # Further subset the training set for faster debugging.
-        subset_ratio = 0.0001
+        subset_ratio = 0.0000001
         subtrain_idx = train_idx[:int(subset_ratio * len(train_idx))]
         subvalid_idx = valid_idx[:50000]
         subtest_idx = split_idx['valid']  # The original 'valid' as testing set.
