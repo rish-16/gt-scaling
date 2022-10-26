@@ -252,8 +252,8 @@ def PREPROCESS_BATCH(batch, emb_dim, dim_emb1, dim_emb2, cfg):
 #         cfg.run_id = run_id
 #         seed_everything(cfg.seed)
         
-#         DEVICE = f'cuda:0'
-#         cfg.device = DEVICE
+        # DEVICE = f'cuda:0'
+        # cfg.device = DEVICE
 
 #         model = create_model()
 
@@ -306,7 +306,9 @@ if __name__ == '__main__':
         seed_everything(cfg.seed)
         
         # auto_select_device()
-        cfg.device = f'cuda:0'
+
+        DEVICE = f'cuda:0'
+        cfg.device = DEVICE
 
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
