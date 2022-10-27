@@ -262,10 +262,11 @@ if __name__ == '__main__':
 
         for n_nodes, cur_batch in per_size_batches.items():
             cur_batch = cur_batch.to(DEVICE)
-            print (cur_batch)
+            # print (cur_batch)
             batch_array = cur_batch.to_data_list()
-            print (batch_array)
+            # print (batch_array)
             new_dl = pyg.loader.DataLoader(batch_array)
+            print (new_dl)
             for j, new_batch in enumerate(new_dl):
                 start_time = time.time()
                 y1 = model(cur_batch)
