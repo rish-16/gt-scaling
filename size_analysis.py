@@ -31,8 +31,8 @@ transformer_inferences = {
     20: [129, 0.05860757827758789]
 }
 
-transformer_x = list(map(lambda x : x[1] / x[0], list(transformer_inferences.values())))
-transformer_y = list(transformer_inferences.keys())
+transformer_x = list(transformer_inferences.keys())
+transformer_y = list(map(lambda x : x[1] / x[0], list(transformer_inferences.values())))
 
 plt.plot(transformer_x, transformer_y, color="red", label="Transformer")
 plt.xlabel("Number of nodes")
