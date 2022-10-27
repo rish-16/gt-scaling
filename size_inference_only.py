@@ -261,7 +261,6 @@ if __name__ == '__main__':
         print (per_size_batches)
 
         for n_nodes, cur_batch in per_size_batches.items():
-            cur_batch = cur_batch.to(DEVICE)
             # print (cur_batch)
             batch_array = cur_batch.to_data_list()
             # print (batch_array)
@@ -269,6 +268,7 @@ if __name__ == '__main__':
             print (len(new_dl))
             print (new_dl.__dict__)
             for j, new_batch in enumerate(new_dl):
+                new_batch.to(torch.device(cfg.device))
                 start_time = time.time()
                 new_batch.split = 'train'
                 y1 = model(new_batch)
