@@ -219,7 +219,7 @@ if __name__ == '__main__':
         seed_everything(cfg.seed)
         
         # auto_select_device()
-        BS = 64
+        BS = 128
         DEVICE = f'cuda:0'
         cfg.device = DEVICE
 
