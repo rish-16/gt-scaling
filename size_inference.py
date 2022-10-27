@@ -347,11 +347,12 @@ if __name__ == '__main__':
         print (size_times)
 
         for n_nodes, cur_batch in per_size_batches.items():
-            # cur_batch = cur_batch.to(DEVICE)
+            cur_batch = cur_batch.to(DEVICE)
             start_time = time.time()
             y1 = model(cur_batch)
             end_time = time.time()
             time_taken = end_time - start_time
+            cur_batch = cur_batch.to("cpu")
 
             cur_N = cur_batch[0].x.size(0)
             # [number of samples in that size bucket, time taken for a batch of 256 samples]
