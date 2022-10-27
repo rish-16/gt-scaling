@@ -267,6 +267,8 @@ if __name__ == '__main__':
             # print (batch_array)
             new_dl = pyg.loader.DataLoader(batch_array)
             print (new_dl)
+            print (len(new_dl))
+            print (new_dl.__dict__)
             for j, new_batch in enumerate(new_dl):
                 start_time = time.time()
                 y1 = model(cur_batch)
