@@ -34,7 +34,7 @@ posenc_RWSE:
   dim_pe: 20
   raw_norm_type: BatchNorm
 train:
-  mode: custom
+  mode: inference-only
   batch_size: 1 # original B = 256 –> 1 because preprocessing buckets
   eval_period: 1
   ckpt_period: 100
