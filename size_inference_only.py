@@ -345,23 +345,20 @@ if __name__ == '__main__':
         with open('bucket_inference_data.pickle', 'rb') as f:
             per_size_batches = pickle.load(f)
 
-        print (per_size_batches) 
-        
-        # # print (per_size_batches)
-        # print (size_times)
+        print (per_size_batches)
 
-        # for n_nodes, cur_batch in per_size_batches.items():
-        #     cur_batch = cur_batch.to(DEVICE)
-        #     start_time = time.time()
-        #     y1 = model(cur_batch)
-        #     end_time = time.time()
-        #     time_taken = end_time - start_time
+        for n_nodes, cur_batch in per_size_batches.items():
+            cur_batch = cur_batch.to(DEVICE)
+            start_time = time.time()
+            y1 = model(cur_batch)
+            end_time = time.time()
+            time_taken = end_time - start_time
 
-        #     cur_N = int(cur_batch[0].x.size(0))
-        #     # [number of samples in that size bucket, time taken for a batch of 256 samples]
-        #     new_entry = [size_times[cur_N][0], time_taken]
-        #     size_times[cur_N] = new_entry
-        #     del cur_batch
+            cur_N = int(cur_batch[0].x.size(0))
+            # [number of samples in that size bucket, time taken for a batch of 256 samples]
+            new_entry = [size_times[cur_N][0], time_taken]
+            size_times[cur_N] = new_entry
+            del cur_batch
 
-        # print ("FINAL\n")
-        # pprint (size_times)
+        print ("FINAL\n")
+        pprint (size_times)

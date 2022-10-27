@@ -343,11 +343,11 @@ if __name__ == '__main__':
             per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
             size_times[n_nodes] = [len(samples)]
 
-        with open('filename.pickle', 'wb') as f:
+        with open('bucket_inference_data.pickle', 'wb') as f:
             pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
         
         print ("Saved pickle file")
-        
+
         # # print (per_size_batches)
         # print (size_times)
 
