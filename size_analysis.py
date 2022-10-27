@@ -31,8 +31,15 @@ transformer_inferences = {
     20: [129, 0.05860757827758789]
 }
 
+performer_inferences = {
+
+}
+
 transformer_x = list(transformer_inferences.keys())
 transformer_y = list(map(lambda x : x[1] / x[0], list(transformer_inferences.values())))
+
+performer_x = list(performer_inferences.keys())
+performer_y = list(map(lambda x : x[1] / x[0], list(performer_inferences.values())))
 
 plt.plot(transformer_x, transformer_y, color="green", label="Transformer")
 plt.plot(performer_x, performer_y, color="green", label="Performer")

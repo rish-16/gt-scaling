@@ -310,7 +310,6 @@ if __name__ == '__main__':
         DEVICE = f'cuda:0'
         cfg.device = DEVICE
 
-
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
 
@@ -318,35 +317,35 @@ if __name__ == '__main__':
                      f"split_index={cfg.dataset.split_index}")
         logging.info(f"    Starting now: {datetime.datetime.now()}")
 
-        loaders = create_loader()
-        train_loader = loaders[0]
+        # loaders = create_loader()
+        # train_loader = loaders[0]
 
         model = create_model()
 
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
 
-        per_size_batches = {}
-        print ("Size of train loader:", train_loader)
-        for i, data_batch in enumerate(train_loader):
-            sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
-            n_nodes = sample.x.size(0)
-            if n_nodes in per_size_batches:
-                if len(per_size_batches[n_nodes]) < BS:
-                    per_size_batches[n_nodes].append(sample)
-            else:
-                per_size_batches[n_nodes] = [sample]
+        # per_size_batches = {}
+        # print ("Size of train loader:", train_loader)
+        # for i, data_batch in enumerate(train_loader):
+        #     sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
+        #     n_nodes = sample.x.size(0)
+        #     if n_nodes in per_size_batches:
+        #         if len(per_size_batches[n_nodes]) < BS:
+        #             per_size_batches[n_nodes].append(sample)
+        #     else:
+        #         per_size_batches[n_nodes] = [sample]
 
-        pprint (list(per_size_batches.keys()))
-        size_times = {}
-        for n_nodes, samples in per_size_batches.items():
-            per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
-            size_times[n_nodes] = [len(samples)]
+        # pprint (list(per_size_batches.keys()))
+        # size_times = {}
+        # for n_nodes, samples in per_size_batches.items():
+        #     per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
+        #     size_times[n_nodes] = [len(samples)]
 
-        with open('filename.pickle', 'wb') as f:
-            pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
-        
-        print ("Saved pickle file")
+        with open('bucket_inference_data.pickle', 'rb') as f:
+            per_size_batches = pickle.load(f)
+
+        print (per_size_batches) 
         
         # # print (per_size_batches)
         # print (size_times)
