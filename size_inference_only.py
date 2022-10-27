@@ -265,7 +265,7 @@ if __name__ == '__main__':
             # print (cur_batch)
             batch_array = cur_batch.to_data_list()
             # print (batch_array)
-            new_dl = pyg.loader.DataLoader(batch_array, shuffle=False, pin_memory=True)
+            new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
             print (len(new_dl))
             print (new_dl.__dict__)
             for j, new_batch in enumerate(new_dl):
