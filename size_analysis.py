@@ -34,8 +34,10 @@ transformer_inferences = {
 transformer_x = list(transformer_inferences.keys())
 transformer_y = list(map(lambda x : x[1] / x[0], list(transformer_inferences.values())))
 
-plt.plot(transformer_x, transformer_y, color="red", label="Transformer")
-plt.xlabel("Number of nodes")
+plt.plot(transformer_x, transformer_y, color="green", label="Transformer")
+plt.plot(performer_x, performer_y, color="green", label="Performer")
+# plt.plot(bigbird_x, bigbird_y, color="green", label="BigBird")
+plt.xlabel("Number of nodes (N)")
 plt.ylabel("Inference time per instance (B = 128)")
 plt.legend()
 plt.grid()

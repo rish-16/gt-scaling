@@ -347,7 +347,7 @@ if __name__ == '__main__':
         print (size_times)
 
         for n_nodes, cur_batch in per_size_batches.items():
-            cur_batch = cur_batch.to(DEVICE)
+            # cur_batch = cur_batch.to(DEVICE)
             start_time = time.time()
             y1 = model(cur_batch)
             end_time = time.time()
