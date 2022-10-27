@@ -171,7 +171,7 @@ class GPSLayer(nn.Module):
             elif self.global_model_type == 'Performer':
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == "Linformer":
-                h_attn = self.self_attn(h_dense, mask=mask)[mask]
+                h_attn = self.self_attn(h_dense) # no masked training
             elif self.global_model_type == 'BigBird':
                 h_attn = self.self_attn(h_dense, attention_mask=mask)
             else:

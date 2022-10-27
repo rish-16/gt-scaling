@@ -332,7 +332,7 @@ if __name__ == '__main__':
             sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
             n_nodes = sample.x.size(0)
             if n_nodes in per_size_batches:
-                if len(per_size_batches[n_nodes]) <= BS:
+                if len(per_size_batches[n_nodes]) < BS:
                     per_size_batches[n_nodes].append(sample)
             else:
                 per_size_batches[n_nodes] = [sample]
