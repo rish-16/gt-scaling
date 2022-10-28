@@ -6,12 +6,12 @@ wandb:
   project: pcqm4m
 dataset:
   format: OGB
-  name: PCQM4Mv2-subset
+  name: PCQM4Mv2-full
   task: graph
   task_type: regression
   transductive: False
   node_encoder: True
-  node_encoder_name: Atom+LapPE
+  node_encoder_name: Atom
   node_encoder_bn: False
   edge_encoder: True
   edge_encoder_name: Bond
