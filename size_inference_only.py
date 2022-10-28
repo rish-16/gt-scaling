@@ -268,10 +268,12 @@ if __name__ == '__main__':
         for n_nodes, cur_batch_list in per_size_batches.items():
             temp = []
             sample = cur_batch_list[0]
+            print (sample)
             sample.to(DEVICE)
             for i in range(BS):
                 start = time.time()
                 y1 = model(sample)
+                print (y1)
                 end = time.time()
                 TOTAL = end - start
                 temp.append(TOTAL)
