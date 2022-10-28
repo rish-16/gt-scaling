@@ -11,7 +11,7 @@ from torch_geometric.utils import to_dense_batch
 from graphgps.layer.gatedgcn_layer import GatedGCNLayer
 from graphgps.layer.gine_conv_layer import GINEConvESLapPE
 from graphgps.layer.bigbird_layer import SingleBigBirdLayer
-from graphgps.layer.linformer_layer import LinformerSelfAttention
+from graphgps.layer.linformer_layer import LinformerAttention
 # from graphgps.layer.reformer_layer import ReformerSelfAttention
 # from graphgps.layer.funtf_layer import FunTFSelfAttention
 
@@ -91,7 +91,7 @@ class GPSLayer(nn.Module):
             raise NotImplementedError(f"FunnelTransformer not implemented yet.")
         elif global_model_type == "Linformer":
             # raise NotImplementedError(f"Linformer not implemented yet.")
-            self.self_attn = LinformerSelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, seq_len=60)
+            self.self_attn = LinformerAttention(dim=dim_h, heads=num_heads, max_seq_len=42)
         elif global_model_type == "Reformer":
             raise NotImplementedError(f"Reformer not implemented yet.")
         else:
