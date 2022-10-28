@@ -91,7 +91,7 @@ class GPSLayer(nn.Module):
             raise NotImplementedError(f"FunnelTransformer not implemented yet.")
         elif global_model_type == "Linformer":
             # raise NotImplementedError(f"Linformer not implemented yet.")
-            self.self_attn = LinformerAttention(dim=dim_h, heads=num_heads, max_seq_len=42)
+            self.self_attn = LinformerAttention(dim=dim_h, heads=num_heads, max_seq_len=42, k=256)
         elif global_model_type == "Reformer":
             raise NotImplementedError(f"Reformer not implemented yet.")
         else:
