@@ -202,7 +202,7 @@ def custom_set_run_dir(cfg, run_id):
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
-    dataset = dataset[:2000]
+    dataset = dataset[:20000]
     train_loader = pyg.loader.DataLoader(dataset, batch_size=1, shuffle=False)
     print(dataset)
     # print(dataset.data.edge_index)
