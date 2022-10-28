@@ -8,6 +8,7 @@ font = {'family' : 'normal',
 
 matplotlib.rc('font', **font)
 
+# ALL TIMINGS ONLY HAVE Atom+LapPE encoders
 transformer_inferences1 = {
     1: 0.02037954330444336,
     2: 0.02208089828491211,
