@@ -249,7 +249,6 @@ if __name__ == '__main__':
             print (fake_edge_idx)
             n_edges = len(fake_edge_idx[0]) // 2
             fake_edge_attr = torch.rand(n_edges, 3)
-            fake_edge_idx, fake_edge_attr = pyg.utils.to_undirected(fake_edge_idx, fake_edge_attr)
 
             """
             DataBatch(
