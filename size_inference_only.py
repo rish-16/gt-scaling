@@ -270,7 +270,6 @@ if __name__ == '__main__':
             sample = cur_batch_list[0]
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
-            print (batch)
             batch.to(DEVICE)
             
             with torch.no_grad():
