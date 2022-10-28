@@ -263,24 +263,25 @@ if __name__ == '__main__':
 
         for n_nodes, cur_batch in per_size_batches.items():
             # print (cur_batch)
-            batch_array = cur_batch.to_data_list()
-            # print (batch_array)
-            new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
-            for j, new_batch in enumerate(new_dl):
-                new_batch.to(torch.device(cfg.device))
-                print (new_batch)
-                start_time = time.time()
-                new_batch.split = 'train'
-                y1 = model(new_batch)
-                end_time = time.time()
-                time_taken = end_time - start_time
+            if n_nodes > 2:
+                batch_array = cur_batch.to_data_list()
+                # print (batch_array)
+                new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
+                for j, new_batch in enumerate(new_dl):
+                    new_batch.to(torch.device(cfg.device))
+                    print (new_batch)
+                    start_time = time.time()
+                    new_batch.split = 'train'
+                    y1 = model(new_batch)
+                    end_time = time.time()
+                    time_taken = end_time - start_time
 
-                cur_N = int(new_batch[0].x.size(0))
-                # [number of samples in that size bucket, time taken for a batch of 256 samples]
-                new_entry = [size_times[cur_N][0], time_taken]
-                size_times[cur_N] = new_entry
-                break
-            del cur_batch
+                    cur_N = int(new_batch[0].x.size(0))
+                    # [number of samples in that size bucket, time taken for a batch of 256 samples]
+                    new_entry = [size_times[cur_N][0], time_taken]
+                    size_times[cur_N] = new_entry
+                    break
+                del cur_batch
 
         print ("FINAL\n")
         pprint (size_times)
