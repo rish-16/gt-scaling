@@ -250,7 +250,8 @@ if __name__ == '__main__':
         #         per_size_batches[n_nodes] = [sample]
 
         # pprint (list(per_size_batches.keys()))
-        # size_times = {}
+        # size_times = {}te
+        
         # for n_nodes, samples in per_size_batches.items():
         #     per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
         #     size_times[n_nodes] = [len(samples)]

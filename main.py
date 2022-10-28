@@ -150,6 +150,9 @@ if __name__ == '__main__':
             if cfg.wandb.use:
                 logging.warning("[W] WandB logging is not supported with the "
                                 "default train.mode, set it to `custom`")
+            for bi, cbatch in enumerate(loaders[0]):
+                print (cbatch)
+                break
             train(loggers, loaders, model, optimizer, scheduler)
         else:
             train_dict[cfg.train.mode](loggers, loaders, model, optimizer, scheduler)
