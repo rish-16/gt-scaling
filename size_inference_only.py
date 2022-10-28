@@ -251,7 +251,7 @@ if __name__ == '__main__':
 
         # pprint (list(per_size_batches.keys()))
         # size_times = {}te
-        
+
         # for n_nodes, samples in per_size_batches.items():
         #     per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
         #     size_times[n_nodes] = [len(samples)]
@@ -266,10 +266,9 @@ if __name__ == '__main__':
             batch_array = cur_batch.to_data_list()
             # print (batch_array)
             new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
-            print (len(new_dl))
-            print (new_dl.__dict__)
             for j, new_batch in enumerate(new_dl):
                 new_batch.to(torch.device(cfg.device))
+                print (new_batch)
                 start_time = time.time()
                 new_batch.split = 'train'
                 y1 = model(new_batch)
