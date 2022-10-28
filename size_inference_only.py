@@ -264,33 +264,19 @@ if __name__ == '__main__':
             sample = batch_list[0]
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
-        pprint (per_size_batches)
+        TIMINGS = {}
 
-        sample = per_size_batches[17][0]
-        sample.to(torch.device(cfg.device))
-        y1 = model(sample)
-        print (y1)
+        for n_nodes, batch_list in per_size_batches.items():
+            timings = []
+            for i in range(BS):
+                sample = batch_list[0]
+                sample.to(torch.device(cfg.device))
+                start = time.time()
+                y1 = model(sample)
+                end = time.time()
+                total_time = end - start
+                timings.append(total_time)
+            avg_time = sum(timings) / len(timings)
+            TIMINGS[n_nodes] = avg_time
 
-        for n_nodes, batch_array in per_size_batches.items():
-            # print (cur_batch)
-            print (n_nodes)
-            if n_nodes > 2:
-                new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
-                for j, new_batch in enumerate(new_dl):
-                    new_batch.to(torch.device(cfg.device))
-                    # print (new_batch)
-                    start_time = time.time()
-                    new_batch.split = 'train'
-                    y1 = model(new_batch)
-                    end_time = time.time()
-                    time_taken = end_time - start_time
-
-                    cur_N = int(new_batch[0].x.size(0))
-                    # [number of samples in that size bucket, time taken for a batch of 256 samples]
-                    new_entry = [size_times[cur_N][0], time_taken]
-                    size_times[cur_N] = new_entry
-                    break
-                del cur_batch
-
-        print ("FINAL\n")
-        pprint (size_times)
+        pprint (TIMINGS)
