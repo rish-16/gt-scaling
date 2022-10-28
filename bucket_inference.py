@@ -266,7 +266,7 @@ if __name__ == '__main__':
         logging.info('Num parameters: %s', cfg.params)
 
         TIMINGS = {}
-        for n_nodes, sample in per_size_batches.items():
+        for NN, sample in per_size_batches.items():
             temp = []
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
