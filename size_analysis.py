@@ -62,11 +62,14 @@ transformer_y = list(transformer_inferences.values())
 performer_x = list(performer_inferences.keys())
 performer_y = list(performer_inferences.values())
 
-bigbird_x = list(bigbird_inferences.keys())
-bigbird_y = list(bigbird_inferences.values())
+# bigbird_x = list(bigbird_inferences.keys())
+# bigbird_y = list(bigbird_inferences.values())
+
+xint = range(min(transformer_x), math.ceil(max(transformer_x))+1)
+matplotlib.pyplot.xticks(xint)
 
 plt.plot(transformer_x, transformer_y, color="green", label="Transformer")
-plt.plot(performer_x, performer_y, color="green", label="Performer")
+plt.plot(performer_x, performer_y, color="red", label="Performer")
 # plt.plot(bigbird_x, bigbird_y, color="green", label="BigBird")
 plt.xlabel("Number of nodes (N)")
 plt.ylabel("Inference time per instance (B = 128)")
