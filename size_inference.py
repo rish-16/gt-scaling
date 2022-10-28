@@ -5,7 +5,7 @@ from ogb.utils.torch_util import replace_numpy_with_torchtensor
 from ogb.utils.url import decide_download, download_url, extract_zip
 import pandas as pd
 from tqdm import tqdm
-import torch, pickle
+import torch, pickle, json
 
 from graphgps.optimizer.extra_optimizers import ExtendedSchedulerConfig
 from torch_geometric.graphgym.cmd_args import parse_args
@@ -270,6 +270,9 @@ if __name__ == '__main__':
                 TIMINGS[n_nodes] = end - start
 
         pprint (TIMINGS)
+
+        with open("BIGBIRD_TIMINGS.json", "a") as f:
+            json.dump(TIMINGS, f)
 
         # # print (per_size_batches)
         # print (size_times)
