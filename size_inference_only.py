@@ -260,7 +260,8 @@ if __name__ == '__main__':
             per_size_batches = pickle.load(f)
 
         for n_nodes, cur_batch in per_size_batches.items():
-            batch_list = cur_batch.to_data_list()
+            batch_list = cur_batch
+            print (batch_list)
             sample = batch_list[1] if len(batch_list) < 1 else batch_list[0]
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
