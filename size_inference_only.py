@@ -285,6 +285,7 @@ if __name__ == '__main__':
 
         TIMINGS = {}
         sample = per_size_batches[16]
+        print (sample)
         # for n_nodes, cur_batch_list in per_size_batches.items():
         temp = []
         # sample = cur_batch_list[0]
