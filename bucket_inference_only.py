@@ -202,8 +202,9 @@ def custom_set_run_dir(cfg, run_id):
 
 if __name__ == '__main__':
     dataset = PygPCQM4Mv2Dataset()
-    train_loader = pyg.loader.DataLoader(dataset, batch_size=1, shuffle=False)
-    print(dataset)
+    # dataset = dataset[]
+    # train_loader = pyg.loader.DataLoader(dataset, batch_size=1, shuffle=False)
+    # print(dataset)
     # print(dataset.data.edge_index)
     # print(dataset.data.edge_index.shape)
     # print(dataset.data.x.shape)
@@ -211,21 +212,24 @@ if __name__ == '__main__':
     # print(dataset[100].y)
     # print(dataset.get_idx_split())
 
-    per_size_batches = {}
-    print ("Size of train loader:", train_loader)
-    for i, data_batch in enumerate(train_loader):
-        sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
-        n_nodes = sample.x.size(0)
-        if n_nodes not in per_size_batches:
-            per_size_batches[n_nodes] = sample
-        else:
-            pass
+    # for i in range(10):
+    #     print (dataset[i])
+
+    # per_size_batches = {}
+    # print ("Size of train loader:", train_loader)
+    # for i, data_batch in enumerate(train_loader):
+    #     sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
+    #     n_nodes = sample.x.size(0)
+    #     if n_nodes not in per_size_batches:
+    #         per_size_batches[n_nodes] = sample
+    #     else:
+    #         pass
 
     try:
-        with open('PCQFULL_3M_AtomEncoder_dataset.pickle', 'wb') as f:
-            pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
+        with open('PCQFULL_3M_AtomEncoder_dataset.pickle', 'rb') as f:
+            per_size_batches = pickle.load(f)
     except Exception as e:
-        print ("COULD NOT SAVE PICKLE")
+        print ("COULD NOT LOAD PICKLE")
         print (e)
     
     # print ("Saved pickle file")
