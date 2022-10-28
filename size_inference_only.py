@@ -259,7 +259,7 @@ if __name__ == '__main__':
         with open('bucket_inference_data.pickle', 'rb') as f:
             per_size_batches = pickle.load(f)
 
-        print (per_size_batches)
+        pprint (per_size_batches)
 
         for n_nodes, cur_batch in per_size_batches.items():
             # print (cur_batch)
