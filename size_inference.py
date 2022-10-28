@@ -232,7 +232,7 @@ if __name__ == '__main__':
         logging.info(f"    Starting now: {datetime.datetime.now()}")
 
         loaders = create_loader()
-        train_loader = loaders[0]
+        train_loader = loaders[1]
 
         model = create_model()
 
@@ -249,7 +249,7 @@ if __name__ == '__main__':
             else:
                 pass
 
-        with open('bucket_inference_data_bigbird.pickle', 'wb') as f:
+        with open('bucket_inference_data_bigbird2.pickle', 'wb') as f:
             pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
         
         print ("Saved pickle file")
