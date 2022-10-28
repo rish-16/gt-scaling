@@ -264,16 +264,21 @@ if __name__ == '__main__':
             sample = batch_list[0]
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
-        pprint (per_size_batches)
+        TIMINGS = {}
+        for n_nodes, cur_batch_list in per_size_batches.items():
+            temp = []
+            for i in range(BS):
+                sample = cur_batch_list[0]
+                sample.to(torch.device(cfg.device))
+                start = time.time()
+                y1 = model(sample)
+                end = time.time()
+                TOTAL = end - start
+                temp.append(TOTAL)
+            avg_time = sum(temp) / len(temp)
+            TIMINGS[n_nodes] = avg_time
 
-        sample = per_size_batches[11][0]
-        sample.to(torch.device(cfg.device))
-        start = time.time()
-        y1 = model(sample)
-        end = time.time()
-        TOTAL = end - start
-        print (y1)
-        print (TOTAL)
+        pprint (TIMINGS)
 
         # for n_nodes, batch_array in per_size_batches.items():
         #     # print (cur_batch)
