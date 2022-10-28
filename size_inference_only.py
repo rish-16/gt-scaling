@@ -296,15 +296,15 @@ if __name__ == '__main__':
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
             
-            try:
-                with torch.no_grad():
-                    start = time.time()
-                    y1 = model(batch)
-                    end = time.time()
-                    print (NN, " TIMING", end - start)
-                    TIMINGS[NN] = end - start
-            except Exception as e:
-                print (e)
+            # try:
+            with torch.no_grad():
+                start = time.time()
+                y1 = model(batch)
+                end = time.time()
+                print (NN, " TIMING", end - start)
+                TIMINGS[NN] = end - start
+            # except Exception as e:
+                # print (e)
 
             del batch
 
