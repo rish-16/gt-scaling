@@ -147,7 +147,18 @@ performer_inferences3 = {
     20: 0.0398557186126709
 }
 
-bigbird_inferences = {}
+bigbird_inferences1 = {
+    10: 0.05702948570251465,
+    11: 0.05690765380859375,
+    12: 0.05574750900268555,
+    13: 0.06166791915893555,
+    14: 0.06205940246582031,
+    15: 0.06158757209777832,
+    16: 0.06302475929260254,
+    # 17: 0.8867254257202148,
+    18: 0.0625913143157959,
+    20: 0.06496667861938477
+}
 
 transformer_x = list(transformer_inferences1.keys())
 transformer_y1 = list(transformer_inferences1.values())
@@ -177,8 +188,8 @@ performer_y = np.asarray(performer_y)
 performer_y_avg = performer_y.mean(axis=1)
 performer_y_std = performer_y.std(axis=1)
 
-# bigbird_x = list(bigbird_inferences1.keys())
-# bigbird_y1 = list(bigbird_inferences1.values())
+bigbird_x = list(bigbird_inferences1.keys())
+bigbird_y1 = list(bigbird_inferences1.values())
 # bigbird_y2 = list(bigbird_inferences2.values())
 # bigbird_y3 = list(bigbird_inferences3.values())
 
@@ -201,7 +212,7 @@ plt.fill_between(
     alpha=0.4
 )
 
-# plt.plot(bigbird_x, bigbird_y, color="cyan", label="BigBird")
+plt.plot(bigbird_x, bigbird_y1, color="blue", label="BigBird")
 
 plt.xlabel("Number of nodes (N)")
 plt.ylabel("Inference time per instance (B = 64)")
