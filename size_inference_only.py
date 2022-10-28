@@ -275,7 +275,7 @@ if __name__ == '__main__':
             
             with torch.no_grad():
                 start = time.time()
-                y1 = model(sample)
+                y1 = model(batch)
                 end = time.time()
                 print (y1)
                 del batch
