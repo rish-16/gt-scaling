@@ -267,9 +267,9 @@ if __name__ == '__main__':
         TIMINGS = {}
         for n_nodes, cur_batch_list in per_size_batches.items():
             temp = []
+            sample = cur_batch_list[0]
+            sample.to(torch.device(cfg.device))
             for i in range(BS):
-                sample = cur_batch_list[0]
-                sample.to(torch.device(cfg.device))
                 start = time.time()
                 y1 = model(sample)
                 end = time.time()
