@@ -284,7 +284,7 @@ if __name__ == '__main__':
         print ()
 
         TIMINGS = {}
-        sample = per_size_batches[16][0]
+        sample = per_size_batches[11][0]
         print (sample)
         # for n_nodes, cur_batch_list in per_size_batches.items():
         temp = []
@@ -298,9 +298,10 @@ if __name__ == '__main__':
             y1 = model(batch)
             end = time.time()
             del batch
-            TIMINGS[n_nodes] = end - start
+            print ("TIMING", end - start)
+            # TIMINGS[n_nodes] = end - start
 
-    pprint (TIMINGS)
+    # pprint (TIMINGS)
 
         # for n_nodes, batch_array in per_size_batches.items():
         #     # print (cur_batch)
