@@ -303,7 +303,7 @@ if __name__ == '__main__':
 
         fake_batch.to(torch.device(cfg.device))
         start_time = time.time()
-        new_batch.split = 'train'
+        fake_batch.split = 'train'
         y1 = model(fake_batch)
         end_time = time.time()
         time_taken = end_time - start_time
