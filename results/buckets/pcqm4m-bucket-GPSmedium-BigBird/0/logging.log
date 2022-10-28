@@ -1,0 +1,13 @@
+[*] Run ID 0: seed=0, split_index=0
+    Starting now: 2022-10-28 17:41:22.794806
+[*] Loaded dataset 'PCQM4Mv2-full' from 'OGB':
+  Data(edge_index=[2, 109093626], edge_attr=[109093626, 3], x=[52970652, 9], y=[3746620])
+  undirected: True
+  num graphs: 3746620
+  avg num_nodes/graph: 14
+  num node features: 9
+  num edge features: 3
+  num classes: (appears to be a regression task)
+Parsed RWSE PE kernel times / steps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+Precomputing Positional Encoding statistics: ['LapPE', 'RWSE'] for all graphs...
+  ...estimated to be undirected: True
