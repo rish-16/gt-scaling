@@ -256,7 +256,7 @@ if __name__ == '__main__':
         #     per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
         #     size_times[n_nodes] = [len(samples)]
 
-        with open('bucket_inference_data_bigbird2_pcqfull.pickle', 'rb') as f:
+        with open('bucket_inference_data_bigbird_pcqfull.pickle', 'rb') as f:
             per_size_batches = pickle.load(f)
 
         print (per_size_batches.keys())
