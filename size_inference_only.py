@@ -268,13 +268,14 @@ if __name__ == '__main__':
         for n_nodes, cur_batch_list in per_size_batches.items():
             temp = []
             sample = cur_batch_list[0]
-            sample.to(torch.device(cfg.device))
+            sample.to(DEVICE)
             for i in range(BS):
                 start = time.time()
                 y1 = model(sample)
                 end = time.time()
                 TOTAL = end - start
                 temp.append(TOTAL)
+            del sample
             avg_time = sum(temp) / len(temp)
             TIMINGS[n_nodes] = avg_time
 
