@@ -277,7 +277,6 @@ if __name__ == '__main__':
                 start = time.time()
                 y1 = model(batch)
                 end = time.time()
-                print (y1)
                 del batch
                 TIMINGS[n_nodes] = end - start
 
