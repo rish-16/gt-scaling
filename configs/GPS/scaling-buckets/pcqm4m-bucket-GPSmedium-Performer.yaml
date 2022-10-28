@@ -32,7 +32,7 @@ posenc_RWSE:
     times_func: range(1,17)
   model: Linear
   dim_pe: 20
-  raw_norm_type: none
+  raw_norm_type: BatchNorm
 train:
   mode: inference-only
   batch_size: 1 # original B = 256 –> 1 because preprocessing buckets
