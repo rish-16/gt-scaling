@@ -284,21 +284,22 @@ if __name__ == '__main__':
         print ()
 
         TIMINGS = {}
-        for n_nodes, cur_batch_list in per_size_batches.items():
-            temp = []
-            sample = cur_batch_list[0]
-            batch_list = [sample for _ in range(BS)]
-            batch = pyg.data.Batch.from_data_list(batch_list)
-            batch.to(DEVICE)
-            
-            with torch.no_grad():
-                start = time.time()
-                y1 = model(batch)
-                end = time.time()
-                del batch
-                TIMINGS[n_nodes] = end - start
+        sample = per_size_batches[16]
+        # for n_nodes, cur_batch_list in per_size_batches.items():
+        temp = []
+        # sample = cur_batch_list[0]
+        batch_list = [sample for _ in range(BS)]
+        batch = pyg.data.Batch.from_data_list(batch_list)
+        batch.to(DEVICE)
+        
+        with torch.no_grad():
+            start = time.time()
+            y1 = model(batch)
+            end = time.time()
+            del batch
+            TIMINGS[n_nodes] = end - start
 
-        pprint (TIMINGS)
+    pprint (TIMINGS)
 
         # for n_nodes, batch_array in per_size_batches.items():
         #     # print (cur_batch)
