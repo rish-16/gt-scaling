@@ -230,8 +230,8 @@ if __name__ == '__main__':
                      f"split_index={cfg.dataset.split_index}")
         logging.info(f"    Starting now: {datetime.datetime.now()}")
 
-        # loaders = create_loader()
-        # train_loader = loaders[0]
+        loaders = create_loader()
+        train_loader = loaders[0]
 
         model = create_model()
 

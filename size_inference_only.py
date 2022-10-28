@@ -259,14 +259,17 @@ if __name__ == '__main__':
         with open('bucket_inference_data.pickle', 'rb') as f:
             per_size_batches = pickle.load(f)
 
+        for n_nodes, cur_batch in per_size_batches.items():
+            batch_list = cur_batch.to_data_list()
+            sample = batch_list[0]
+            per_size_batches[n_nodes] = [sample for _ in range(BS)]
+
         pprint (per_size_batches)
 
-        for n_nodes, cur_batch in per_size_batches.items():
+        for n_nodes, batch_array in per_size_batches.items():
             # print (cur_batch)
             print (n_nodes)
             if n_nodes > 2:
-                batch_array = cur_batch.to_data_list()
-                # print (batch_array)
                 new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
                 for j, new_batch in enumerate(new_dl):
                     new_batch.to(torch.device(cfg.device))
