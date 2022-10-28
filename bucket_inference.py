@@ -214,6 +214,8 @@ if __name__ == '__main__':
     per_size_batches = {}
     print ("Size of train loader:", train_loader)
     for i, data_batch in enumerate(train_loader):
+        if i % 500000 == 0:
+            print ("Sample", i)
         sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
         n_nodes = sample.x.size(0)
         if n_nodes not in per_size_batches:
