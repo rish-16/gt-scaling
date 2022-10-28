@@ -229,7 +229,7 @@ if __name__ == '__main__':
     #     pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
     
     # print ("Saved pickle file")
-    print (per_size_batches.keys())
+    pprint (per_size_batches)
 
     # args = parse_args()
     # # Load config file
