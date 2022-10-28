@@ -265,7 +265,17 @@ if __name__ == '__main__':
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
         print ("\n17 SAMPLE:")
-        pprint (per_size_batches[17])
+        pprint (per_size_batches[17][0])
+        pprint (per_size_batches[17][1])
+        pprint (per_size_batches[17][2])
+        pprint (per_size_batches[17][3])
+        pprint (per_size_batches[17][4])
+        print ("\n18 SAMPLE:")
+        pprint (per_size_batches[18][0])
+        pprint (per_size_batches[18][1])
+        pprint (per_size_batches[18][2])
+        pprint (per_size_batches[18][3])
+        pprint (per_size_batches[18][4])
         print ()
 
         TIMINGS = {}
