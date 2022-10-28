@@ -244,22 +244,32 @@ if __name__ == '__main__':
         for i, data_batch in enumerate(train_loader):
             sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
             n_nodes = sample.x.size(0)
-            if n_nodes in per_size_batches:
-                if len(per_size_batches[n_nodes]) < BS:
-                    per_size_batches[n_nodes].append(sample)
-            else:
+            if n_nodes not in per_size_batches:
                 per_size_batches[n_nodes] = [sample]
-
-        pprint (list(per_size_batches.keys()))
-        size_times = {}
-        for n_nodes, samples in per_size_batches.items():
-            per_size_batches[n_nodes] = pyg.data.Batch.from_data_list(samples[:BS])
-            size_times[n_nodes] = [len(samples)]
+            else:
+                pass
 
         with open('bucket_inference_data.pickle', 'wb') as f:
             pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
         
         print ("Saved pickle file")
+
+        TIMINGS = {}
+        for n_nodes, cur_batch_list in per_size_batches.items():
+            temp = []
+            sample = cur_batch_list[0]
+            batch_list = [sample for _ in range(BS)]
+            batch = pyg.data.Batch.from_data_list(batch_list)
+            batch.to(DEVICE)
+            
+            with torch.no_grad():
+                start = time.time()
+                y1 = model(batch)
+                end = time.time()
+                del batch
+                TIMINGS[n_nodes] = end - start
+
+        pprint (TIMINGS)
 
         # # print (per_size_batches)
         # print (size_times)

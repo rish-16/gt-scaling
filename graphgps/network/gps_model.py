@@ -21,9 +21,10 @@ class FeatureEncoder(torch.nn.Module):
         self.dim_in = dim_in
         if cfg.dataset.node_encoder:
             # Encode integer node features via nn.Embeddings
-            NodeEncoder = register.node_encoder_dict[
-                cfg.dataset.node_encoder_name]
+            NodeEncoder = register.node_encoder_dict[cfg.dataset.node_encoder_name]
+            
             self.node_encoder = NodeEncoder(cfg.gnn.dim_inner)
+            
             if cfg.dataset.node_encoder_bn:
                 self.node_encoder_bn = BatchNorm1dNode(
                     new_layer_config(cfg.gnn.dim_inner, -1, -1, has_act=False,
@@ -34,13 +35,19 @@ class FeatureEncoder(torch.nn.Module):
             # Hard-set edge dim for PNA.
             cfg.gnn.dim_edge = 16 if 'PNA' in cfg.gt.layer_type else cfg.gnn.dim_inner
             # Encode integer edge features via nn.Embeddings
-            EdgeEncoder = register.edge_encoder_dict[
-                cfg.dataset.edge_encoder_name]
+            EdgeEncoder = register.edge_encoder_dict[cfg.dataset.edge_encoder_name]
+            
             self.edge_encoder = EdgeEncoder(cfg.gnn.dim_edge)
+            
             if cfg.dataset.edge_encoder_bn:
                 self.edge_encoder_bn = BatchNorm1dNode(
-                    new_layer_config(cfg.gnn.dim_edge, -1, -1, has_act=False,
-                                     has_bias=False, cfg=cfg))
+                                        new_layer_config(
+                                            cfg.gnn.dim_edge, 
+                                            -1, -1, 
+                                            has_act=False, 
+                                            has_bias=False, 
+                                            cfg=cfg
+                                        ))
 
     def forward(self, batch):
         for module in self.children():
