@@ -267,6 +267,7 @@ if __name__ == '__main__':
         pprint (per_size_batches)
 
         sample = per_size_batches[17][0]
+        sample.to(torch.device(cfg.device))
         y1 = model(sample)
         print (y1)
 
