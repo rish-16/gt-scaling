@@ -249,10 +249,11 @@ if __name__ == '__main__':
             else:
                 pass
 
-        with open('bucket_inference_data.pickle', 'wb') as f:
+        with open('bucket_inference_data_bigbird.pickle', 'wb') as f:
             pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
         
         print ("Saved pickle file")
+        print (per_size_batches)
 
         TIMINGS = {}
         for n_nodes, sample in per_size_batches.items():
