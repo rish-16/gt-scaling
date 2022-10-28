@@ -268,7 +268,7 @@ if __name__ == '__main__':
         for n_nodes, cur_batch_list in per_size_batches.items():
             temp = []
             sample = cur_batch_list[0]
-            batch_list = [sample for _ in BS]
+            batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
             print (batch)
             batch.to(DEVICE)
