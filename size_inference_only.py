@@ -268,18 +268,18 @@ if __name__ == '__main__':
         for n_nodes, cur_batch_list in per_size_batches.items():
             temp = []
             sample = cur_batch_list[0]
-            print (sample)
-            sample.to(DEVICE)
-            for i in range(BS):
+            batch_list = [sample for _ in BS]
+            batch = pyg.data.Batch.from_data_list(batch_list)
+            print (batch)
+            batch.to(DEVICE)
+            
+            with torch.no_grad():
                 start = time.time()
                 y1 = model(sample)
-                print (y1)
                 end = time.time()
-                TOTAL = end - start
-                temp.append(TOTAL)
-            del sample
-            avg_time = sum(temp) / len(temp)
-            TIMINGS[n_nodes] = avg_time
+                print (y1)
+                del batch
+                TIMINGS[n_nodes] = end - start
 
         pprint (TIMINGS)
 
