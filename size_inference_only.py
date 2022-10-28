@@ -291,7 +291,7 @@ if __name__ == '__main__':
         for NN, cur_batch_list in per_size_batches.items():
             temp = []
             sample = cur_batch_list[0]
-            print (sample)
+            print (NN, sample)
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
@@ -308,7 +308,7 @@ if __name__ == '__main__':
 
             del batch
 
-    pprint (TIMINGS)
+        pprint (TIMINGS)
 
         # for n_nodes, batch_array in per_size_batches.items():
         #     # print (cur_batch)
