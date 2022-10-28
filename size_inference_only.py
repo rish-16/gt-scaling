@@ -263,6 +263,7 @@ if __name__ == '__main__':
 
         for n_nodes, cur_batch in per_size_batches.items():
             # print (cur_batch)
+            print (n_nodes)
             if n_nodes > 2:
                 batch_array = cur_batch.to_data_list()
                 # print (batch_array)
