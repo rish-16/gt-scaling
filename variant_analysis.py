@@ -106,7 +106,7 @@ for i, xy in enumerate(zip(transformer_time, transformer_mae)):
     ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
 ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="green")
 for i, xy in enumerate(zip(performer_time, performer_mae)):
-    ax.annotate(f'Pf-{classes[i]}', xy=xy, textcoords='data')
+    ax.annotate(f'PF-{classes[i]}', xy=xy, textcoords='data')
 
 ax.grid()
 plt.xlabel("Inference Time (s)")

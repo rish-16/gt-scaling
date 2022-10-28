@@ -302,9 +302,7 @@ if __name__ == '__main__':
                     print (NN, " TIMING", end - start)
                     TIMINGS[NN] = end - start
             except Exception as e:
-                print (NN)
-                print (e)
-                print()
+                print (NN, e)
 
             del batch
 
