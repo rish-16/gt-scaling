@@ -246,7 +246,8 @@ if __name__ == '__main__':
             fake_y = torch.rand(1)
             fake_edge_idx = torch.randint(0, fake_N_nodes, size=[2, 24])
             fake_edge_idx = pyg.utils.to_undirected(fake_edge_idx)
-            n_edges = len(fake_edge_idx[0]) / 2
+            print (fake_edge_idx)
+            n_edges = len(fake_edge_idx[0]) // 2
             fake_edge_attr = torch.rand(n_edges, 3)
             fake_edge_idx, fake_edge_attr = pyg.utils.to_undirected(fake_edge_idx, fake_edge_attr)
 
