@@ -266,6 +266,10 @@ if __name__ == '__main__':
 
         pprint (per_size_batches)
 
+        sample = per_size_batches[17][0]
+        y1 = model(sample)
+        print (y1)
+
         for n_nodes, batch_array in per_size_batches.items():
             # print (cur_batch)
             print (n_nodes)
@@ -273,7 +277,7 @@ if __name__ == '__main__':
                 new_dl = pyg.loader.DataLoader(batch_array, shuffle=False)
                 for j, new_batch in enumerate(new_dl):
                     new_batch.to(torch.device(cfg.device))
-                    print (new_batch)
+                    # print (new_batch)
                     start_time = time.time()
                     new_batch.split = 'train'
                     y1 = model(new_batch)
