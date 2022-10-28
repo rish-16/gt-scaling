@@ -245,7 +245,7 @@ if __name__ == '__main__':
             sample = data_batch.to_data_list()[0] # only works with batch size of 1 in the yaml
             n_nodes = sample.x.size(0)
             if n_nodes not in per_size_batches:
-                per_size_batches[n_nodes] = [sample]
+                per_size_batches[n_nodes] = sample
             else:
                 pass
 
@@ -255,9 +255,8 @@ if __name__ == '__main__':
         print ("Saved pickle file")
 
         TIMINGS = {}
-        for n_nodes, cur_batch_list in per_size_batches.items():
+        for n_nodes, sample in per_size_batches.items():
             temp = []
-            sample = cur_batch_list[0]
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
