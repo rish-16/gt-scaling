@@ -244,8 +244,10 @@ if __name__ == '__main__':
         for i in range(BS):
             fake_x = torch.rand(fake_N_nodes, 9)
             fake_y = torch.rand(1)
-            fake_edge_attr = torch.rand(fake_N_nodes, 8)
-            fake_edge_idx = torch.randint(0, fake_N_nodes, size=[2, 23])
+            fake_edge_idx = torch.randint(0, fake_N_nodes, size=[2, 24])
+            fake_edge_idx = pyg.utils.to_undirected(fake_edge_idx)
+            n_edges = len(fake_edge_idx[0]) / 2
+            fake_edge_attr = torch.rand(n_edges, 3)
             fake_edge_idx, fake_edge_attr = pyg.utils.to_undirected(fake_edge_idx, fake_edge_attr)
 
             """
@@ -271,7 +273,7 @@ if __name__ == '__main__':
                             pestat_RWSE=torch.rand(fake_N_nodes, 16)
                         )
             all_fake_graphs.append(new_data)
-            
+
         fake_batch = pyg.data.Batch.from_data_list(all_fake_graphs)
         print ("FAKE BATCH:", fake_batch)
 
