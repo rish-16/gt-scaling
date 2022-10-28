@@ -264,6 +264,12 @@ if __name__ == '__main__':
             sample = batch_list[1] if len(batch_list) < 1 else batch_list[0]
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
+        print ("\n15 SAMPLE:")
+        pprint (per_size_batches[15][0])
+        pprint (per_size_batches[15][1])
+        pprint (per_size_batches[15][2])
+        pprint (per_size_batches[15][3])
+        pprint (per_size_batches[15][4])
         print ("\n17 SAMPLE:")
         pprint (per_size_batches[17][0])
         pprint (per_size_batches[17][1])
