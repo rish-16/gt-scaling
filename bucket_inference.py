@@ -272,12 +272,17 @@ if __name__ == '__main__':
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
             
-            with torch.no_grad():
-                start = time.time()
-                y1 = model(batch)
-                end = time.time()
-                del batch
-                TIMINGS[n_nodes] = end - start
+            try:
+                with torch.no_grad():
+                    start = time.time()
+                    y1 = model(batch)
+                    end = time.time()
+                    print (NN, " TIMING", end - start)
+                    TIMINGS[NN] = end - start
+            except Exception as e:
+                print (NN, e)
+
+            del batch
 
         pprint (TIMINGS)
 
