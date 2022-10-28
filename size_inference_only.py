@@ -259,6 +259,8 @@ if __name__ == '__main__':
         with open('bucket_inference_data_bigbird.pickle', 'rb') as f:
             per_size_batches = pickle.load(f)
 
+        print (per_size_batches.keys())
+
         for n_nodes, cur_batch in per_size_batches.items():
             sample = cur_batch
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
