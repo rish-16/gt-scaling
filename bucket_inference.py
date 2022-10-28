@@ -231,58 +231,57 @@ if __name__ == '__main__':
     # print ("Saved pickle file")
     pprint (per_size_batches)
 
-    # args = parse_args()
-    # # Load config file
-    # set_cfg(cfg)
-    # load_cfg(cfg, args)
-    # # custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
-    # dump_cfg(cfg)
-    # # Set Pytorch environment
-    # torch.set_num_threads(cfg.num_threads)
-    # # gpu_dev = str(input("Enter GPU device: "))
-    # # Repeat for multiple experiment runs
-    # for run_id, seed, split_index in zip(*run_loop_settings()):
-    #     # Set configurations for each run
-    #     # custom_set_run_dir(cfg, run_id)
-    #     set_printing()
-    #     cfg.dataset.split_index = split_index
-    #     cfg.seed = seed
-    #     cfg.run_id = run_id
-    #     seed_everything(cfg.seed)
+    args = parse_args()
+    # Load config file
+    set_cfg(cfg)
+    load_cfg(cfg, args)
+    # custom_set_out_dir(cfg, args.cfg_file, cfg.name_tag)
+    dump_cfg(cfg)
+    # Set Pytorch environment
+    torch.set_num_threads(cfg.num_threads)
+    # gpu_dev = str(input("Enter GPU device: "))
+    # Repeat for multiple experiment runs
+    for run_id, seed, split_index in zip(*run_loop_settings()):
+        # Set configurations for each run
+        # custom_set_run_dir(cfg, run_id)
+        set_printing()
+        cfg.dataset.split_index = split_index
+        cfg.seed = seed
+        cfg.run_id = run_id
+        seed_everything(cfg.seed)
         
-    #     # auto_select_device()
-    #     BS = 64
-    #     DEVICE = f'cuda:0'
-    #     cfg.device = DEVICE
+        # auto_select_device()
+        BS = 64
+        DEVICE = f'cuda:0'
+        cfg.device = DEVICE
 
+        if cfg.pretrained.dir:
+            cfg = load_pretrained_model_cfg(cfg)
 
-    #     if cfg.pretrained.dir:
-    #         cfg = load_pretrained_model_cfg(cfg)
+        logging.info(f"    Starting now: {datetime.datetime.now()}")
 
-    #     logging.info(f"    Starting now: {datetime.datetime.now()}")
+        model = create_model()
 
-    #     model = create_model()
+        cfg.params = params_count(model)
+        logging.info('Num parameters: %s', cfg.params)
 
-    #     cfg.params = params_count(model)
-    #     logging.info('Num parameters: %s', cfg.params)
-
-    #     TIMINGS = {}
-    #     for n_nodes, sample in per_size_batches.items():
-    #         temp = []
-    #         batch_list = [sample for _ in range(BS)]
-    #         batch = pyg.data.Batch.from_data_list(batch_list)
-    #         batch.to(DEVICE)
+        TIMINGS = {}
+        for n_nodes, sample in per_size_batches.items():
+            temp = []
+            batch_list = [sample for _ in range(BS)]
+            batch = pyg.data.Batch.from_data_list(batch_list)
+            batch.to(DEVICE)
             
-    #         with torch.no_grad():
-    #             start = time.time()
-    #             y1 = model(batch)
-    #             end = time.time()
-    #             del batch
-    #             TIMINGS[n_nodes] = end - start
+            with torch.no_grad():
+                start = time.time()
+                y1 = model(batch)
+                end = time.time()
+                del batch
+                TIMINGS[n_nodes] = end - start
 
-    #     pprint (TIMINGS)
+        pprint (TIMINGS)
 
-    #     with open("BIGBIRD_TIMINGS.json", "a") as f:
-    #         json.dump(TIMINGS, f)
+        # with open("BIGBIRD_TIMINGS.json", "a") as f:
+        #     json.dump(TIMINGS, f)
 
     
