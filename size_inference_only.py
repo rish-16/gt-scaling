@@ -263,25 +263,25 @@ if __name__ == '__main__':
             sample = cur_batch
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
-        print ("\n15 SAMPLE:")
-        pprint (per_size_batches[15][0])
-        pprint (per_size_batches[15][1])
-        pprint (per_size_batches[15][2])
-        pprint (per_size_batches[15][3])
-        pprint (per_size_batches[15][4])
-        print ("\n17 SAMPLE:")
-        pprint (per_size_batches[17][0])
-        pprint (per_size_batches[17][1])
-        pprint (per_size_batches[17][2])
-        pprint (per_size_batches[17][3])
-        pprint (per_size_batches[17][4])
-        print ("\n18 SAMPLE:")
-        pprint (per_size_batches[18][0])
-        pprint (per_size_batches[18][1])
-        pprint (per_size_batches[18][2])
-        pprint (per_size_batches[18][3])
-        pprint (per_size_batches[18][4])
-        print ()
+        # print ("\n15 SAMPLE:")
+        # pprint (per_size_batches[15][0])
+        # pprint (per_size_batches[15][1])
+        # pprint (per_size_batches[15][2])
+        # pprint (per_size_batches[15][3])
+        # pprint (per_size_batches[15][4])
+        # print ("\n17 SAMPLE:")
+        # pprint (per_size_batches[17][0])
+        # pprint (per_size_batches[17][1])
+        # pprint (per_size_batches[17][2])
+        # pprint (per_size_batches[17][3])
+        # pprint (per_size_batches[17][4])
+        # print ("\n18 SAMPLE:")
+        # pprint (per_size_batches[18][0])
+        # pprint (per_size_batches[18][1])
+        # pprint (per_size_batches[18][2])
+        # pprint (per_size_batches[18][3])
+        # pprint (per_size_batches[18][4])
+        # print ()
 
         TIMINGS = {}
         sample = per_size_batches[11][0]
@@ -297,7 +297,7 @@ if __name__ == '__main__':
                 start = time.time()
                 y1 = model(batch)
                 end = time.time()
-                print ("TIMING", end - start)
+                print (NN, " TIMING", end - start)
                 TIMINGS[NN] = end - start
 
             del batch
