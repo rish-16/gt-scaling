@@ -16,23 +16,6 @@ dataset:
   edge_encoder: True
   edge_encoder_name: Bond
   edge_encoder_bn: False
-posenc_LapPE:
-  enable: True
-  eigen:
-    laplacian_norm: none
-    eigvec_norm: L2
-    max_freqs: 8
-  model: DeepSet
-  dim_pe: 8
-  layers: 2
-  raw_norm_type: none  
-posenc_RWSE:
-  enable: True
-  kernel:
-    times_func: range(1,17)
-  model: Linear
-  dim_pe: 20
-  raw_norm_type: BatchNorm
 train:
   mode: custom
   batch_size: 256
