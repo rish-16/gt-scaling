@@ -247,20 +247,25 @@ if __name__ == '__main__':
             sample = cur_batch
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
+        for i in range(0, 10):
+            del per_size_batches[i]
+        print ("deleted single digit keys < 10")
+
         TIMINGS = {}
         for NN, cur_batch_list in per_size_batches.items():
             temp = []
             sample = cur_batch_list[0]
-            print (sample)
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
             
             try:
+                print ("Size:", NN)
                 with torch.no_grad():
                     start = time.time()
                     y1 = model(batch)
                     end = time.time()
-                    print (NN, " TIMING", end - start)
+                    print ("TOTAL RUNTIME", end - start)
+                    print ()
             except Exception as e:
                 print (NN, e)
