@@ -12,6 +12,7 @@ from graphgps.layer.gatedgcn_layer import GatedGCNLayer
 from graphgps.layer.gine_conv_layer import GINEConvESLapPE
 from graphgps.layer.bigbird_layer import SingleBigBirdLayer
 from graphgps.layer.linformer_layer import LinformerAttention
+from graphgps.layer.raw_mha import RishAttention
 # from graphgps.layer.reformer_layer import ReformerSelfAttention
 # from graphgps.layer.funtf_layer import FunTFSelfAttention
 
@@ -79,7 +80,9 @@ class GPSLayer(nn.Module):
         if global_model_type == 'None':
             self.self_attn = None
         elif global_model_type == 'Transformer':
-            self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
+            # self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
+
+            self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
         elif global_model_type == 'Performer':
             self.self_attn = SelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, causal=False)
         elif global_model_type == "BigBird":
@@ -167,7 +170,8 @@ class GPSLayer(nn.Module):
         if self.self_attn is not None:
             h_dense, mask = to_dense_batch(h, batch.batch)
             if self.global_model_type == 'Transformer':
-                h_attn = self._sa_block(h_dense, None, ~mask)[mask]
+                # h_attn = self._sa_block(h_dense, None, ~mask)[mask]
+                h_attn = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)[0][mask]
             elif self.global_model_type == 'Performer':
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == "Linformer":
