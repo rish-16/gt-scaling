@@ -132,7 +132,7 @@ class GPSLayer(nn.Module):
         self.ff_dropout1 = nn.Dropout(dropout)
         self.ff_dropout2 = nn.Dropout(dropout)
 
-    def forward(self, batch, layer_idx):
+    def forward(self, batch):
         h = batch.x
         h_in1 = h  # for first residual connection
 
