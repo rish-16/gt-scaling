@@ -206,6 +206,7 @@ class RishAttention(nn.Module):
             attn_weights = attn_weights_float.view(
                 bsz, self.num_heads, tgt_len, src_len
             ).transpose(1, 0)
+            
             if not need_head_weights:
                 # average attention weights over heads
                 attn_weights = attn_weights.mean(dim=0)
@@ -218,7 +219,7 @@ class RishAttention(nn.Module):
 
         pprint (attn_stats)
 
-        return attn, attn_weights
+        return attn, attn_weights, attn_stats
 
     def apply_sparse_mask(self, attn_weights, tgt_len: int, src_len: int, bsz: int):
         return attn_weights

@@ -171,7 +171,8 @@ class GPSLayer(nn.Module):
             h_dense, mask = to_dense_batch(h, batch.batch)
             if self.global_model_type == 'Transformer':
                 # h_attn = self._sa_block(h_dense, None, ~mask)[mask]
-                h_attn = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)[0][mask]
+                h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
+                h_attn = h_attn[mask]
             elif self.global_model_type == 'Performer':
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == "Linformer":
