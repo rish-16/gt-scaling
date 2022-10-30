@@ -99,6 +99,7 @@ class GPSModel(torch.nn.Module):
 
     def forward(self, batch):
         for lidx, module in enumerate(self.children()):
+            print (module)
             if isinstance(module, GPSLayer):
                 batch = module(batch, layer_idx=lidx)
             else:
