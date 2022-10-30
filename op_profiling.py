@@ -247,9 +247,10 @@ if __name__ == '__main__':
             sample = cur_batch
             per_size_batches[n_nodes] = [sample for _ in range(BS)]
 
-        # for i in range(0, 10):
-            # del per_size_batches[i]
-        # print ("deleted single digit keys < 10")
+        for i in range(1, 10):
+            if i in per_size_batches:
+                del per_size_batches[i]
+        print ("deleted single digit keys < 10")
 
         TIMINGS = {}
         for NN, cur_batch_list in per_size_batches.items():
