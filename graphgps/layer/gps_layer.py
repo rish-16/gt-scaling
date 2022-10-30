@@ -202,7 +202,6 @@ class GPSLayer(nn.Module):
             h = self.norm2(h)
 
         batch.x = h
-        print (batch)
         batch.attn_profile_timings = attn_profiling_stats
         return batch
 

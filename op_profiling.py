@@ -1,4 +1,4 @@
-import os, logging, datetime, shutil, time
+import os, logging, datetime, shutil, time, json
 import os.path as osp
 from ogb.utils import smiles2graph
 from ogb.utils.torch_util import replace_numpy_with_torchtensor
@@ -260,25 +260,16 @@ if __name__ == '__main__':
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
             
-            # try:
-            #     print ("Size:", NN)
-            #     with torch.no_grad():
-            #         start = time.time()
-            #         y1 = model(batch)
-            #         print (y1.attn_profile_timings)
-            #         end = time.time()
-            #         print ("TOTAL RUNTIME", end - start)
-            #         print ()
-            # except Exception as e:
-            #     print (NN, e)
+            try:
+                print ("Size:", NN)
+                with torch.no_grad():
+                    start = time.time()
+                    y1 = model(batch)
+                    TIMINGS[NN] = batch.attn_profile_timings
+                    end = time.time()
+            except Exception as e:
+                print (NN, e)
 
-            print ("Size:", NN)
-            start = time.time()
-            y1 = model(batch)
-            print (batch.attn_profile_timings)
-            print (y1.attn_profile_timings)
-            end = time.time()
-            print ("TOTAL RUNTIME", end - start)
-            print ()
-
-            break
+        with open("op_bucket_timing.json", "a") as f:
+            json.dump(TIMINGS, f)
+        print ("Saved timings")
