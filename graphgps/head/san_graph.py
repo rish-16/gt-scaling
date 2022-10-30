@@ -31,7 +31,7 @@ class SANGraphHead(nn.Module):
     def _apply_index(self, batch):
         return batch.graph_feature, batch.y
 
-    def forward(self, batch, layer_idx=None):
+    def forward(self, batch):
         graph_emb = self.pooling_fun(batch.x, batch.batch)
         for l in range(self.L):
             graph_emb = self.FC_layers[l](graph_emb)

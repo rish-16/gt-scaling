@@ -49,7 +49,7 @@ class FeatureEncoder(torch.nn.Module):
                                             cfg=cfg
                                         ))
 
-    def forward(self, batch, layer_idx=None):
+    def forward(self, batch):
         for module in self.children():
             batch = module(batch)
         return batch
@@ -99,5 +99,5 @@ class GPSModel(torch.nn.Module):
 
     def forward(self, batch):
         for lidx, module in enumerate(self.children()):
-            batch = module(batch, layer_idx=lidx)
+            batch = module(batch)
         return batch
