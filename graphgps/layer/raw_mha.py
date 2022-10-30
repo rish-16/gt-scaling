@@ -12,6 +12,7 @@ from typing import Optional, Tuple
 import torch
 import torch.nn as nn
 from torch import Tensor
+from pprint import pprint
 
 class RishAttention(nn.Module):
     """Multi-headed attention.
@@ -158,7 +159,7 @@ class RishAttention(nn.Module):
         DP_START_TIME = time.time()
         attn_weights = torch.bmm(q, k.transpose(1, 2))
         DP_END_TIME = time.time()
-        print ("******QK time:", DP_END_TIME - DP_START_TIME)
+        # print ("******QK time:", DP_END_TIME - DP_START_TIME)
         attn_weights = self.apply_sparse_mask(attn_weights, tgt_len, src_len, bsz)
 
         assert list(attn_weights.size()) == [bsz * self.num_heads, tgt_len, src_len]
@@ -185,7 +186,7 @@ class RishAttention(nn.Module):
         SOFTMAX_START_TIME = time.time()
         attn_weights_float = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32)
         SOFTMAX_END_TIME = time.time()
-        print ("******softmax time:", SOFTMAX_END_TIME - SOFTMAX_START_TIME)
+        # print ("******softmax time:", SOFTMAX_END_TIME - SOFTMAX_START_TIME)
         attn_weights = attn_weights_float.type_as(attn_weights)
         attn_probs = self.dropout_module(attn_weights)
 
@@ -194,7 +195,7 @@ class RishAttention(nn.Module):
         AV_START_TIME = time.time()
         attn = torch.bmm(attn_probs, v)
         AV_END_TIME = time.time()
-        print ("******av time:", AV_END_TIME - AV_START_TIME)
+        # print ("******av time:", AV_END_TIME - AV_START_TIME)
         assert list(attn.size()) == [bsz * self.num_heads, tgt_len, self.head_dim]
 
         attn = attn.transpose(0, 1).contiguous().view(tgt_len, bsz, embed_dim)
@@ -210,12 +211,12 @@ class RishAttention(nn.Module):
                 attn_weights = attn_weights.mean(dim=0)
 
         attn_stats = {
-            "dot": DP_END_TIME - DP_START_TIME,
+            "qk": DP_END_TIME - DP_START_TIME,
             "softmax": SOFTMAX_END_TIME - SOFTMAX_START_TIME,
-            "proj": PROJ_END_TIME - PROJ_START_TIME
+            "av": AV_END_TIME - AV_START_TIME
         }
 
-        print (attn_stats)
+        pprint (attn_stats)
 
         return attn, attn_weights
 
