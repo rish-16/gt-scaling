@@ -261,16 +261,24 @@ if __name__ == '__main__':
             batch.to(DEVICE)
             batch.attn_profile_timings = {}
             
-            try:
-                print ("Size:", NN)
-                with torch.no_grad():
-                    start = time.time()
-                    y1 = model(batch)
-                    print (y1.attn_profile_timings)
-                    end = time.time()
-                    print ("TOTAL RUNTIME", end - start)
-                    print ()
-            except Exception as e:
-                print (NN, e)
+            # try:
+            #     print ("Size:", NN)
+            #     with torch.no_grad():
+            #         start = time.time()
+            #         y1 = model(batch)
+            #         print (y1.attn_profile_timings)
+            #         end = time.time()
+            #         print ("TOTAL RUNTIME", end - start)
+            #         print ()
+            # except Exception as e:
+            #     print (NN, e)
+
+            print ("Size:", NN)
+            start = time.time()
+            y1 = model(batch)
+            print (y1.attn_profile_timings)
+            end = time.time()
+            print ("TOTAL RUNTIME", end - start)
+            print ()
 
             break
