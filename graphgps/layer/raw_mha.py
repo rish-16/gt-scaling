@@ -81,7 +81,7 @@ class RishAttention(nn.Module):
         query,
         key: Optional[Tensor],
         value: Optional[Tensor],
-        attn_bias: Optional[Tensor],
+        attn_bias: Optional[Tensor] = None,
         key_padding_mask: Optional[Tensor] = None,
         need_weights: bool = True,
         attn_mask: Optional[Tensor] = None,
