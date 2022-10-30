@@ -98,6 +98,9 @@ class GPSModel(torch.nn.Module):
         self.post_mp = GNNHead(dim_in=cfg.gnn.dim_inner, dim_out=dim_out)
 
     def forward(self, batch):
-        for module in self.children():
-            batch = module(batch)
+        for lidx, module in enumerate(self.children()):
+            if isinstance(module, GPSLayer):
+                batch = module(batch, layer_idx=lidx)
+            else:
+                batch = module(batch)
         return batch

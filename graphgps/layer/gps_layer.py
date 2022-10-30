@@ -132,7 +132,7 @@ class GPSLayer(nn.Module):
         self.ff_dropout1 = nn.Dropout(dropout)
         self.ff_dropout2 = nn.Dropout(dropout)
 
-    def forward(self, batch):
+    def forward(self, batch, layer_idx):
         h = batch.x
         h_in1 = h  # for first residual connection
 
@@ -202,7 +202,7 @@ class GPSLayer(nn.Module):
             h = self.norm2(h)
 
         batch.x = h
-        batch.attn_profile_timings = attn_profiling_stats
+        batch.attn_profile_timings[layer_idx] = attn_profiling_stats
         return batch
 
     def _sa_block(self, x, attn_mask, key_padding_mask):
