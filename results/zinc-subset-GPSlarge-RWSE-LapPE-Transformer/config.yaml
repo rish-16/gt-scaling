@@ -11,8 +11,8 @@ dataset:
   edge_dim: 128
   edge_encoder: true
   edge_encoder_bn: false
-  edge_encoder_name: Bond
-  edge_encoder_num_types: 0
+  edge_encoder_name: TypeDictEdge
+  edge_encoder_num_types: 4
   edge_message_ratio: 0.8
   edge_negative_sampling_ratio: 1.0
   edge_train_mode: all
@@ -20,15 +20,15 @@ dataset:
   encoder_bn: true
   encoder_dim: 128
   encoder_name: db
-  format: OGB
+  format: PyG-ZINC
   label_column: none
   label_table: none
   location: local
-  name: PCQM4Mv2-full
+  name: subset
   node_encoder: true
   node_encoder_bn: false
-  node_encoder_name: Atom
-  node_encoder_num_types: 0
+  node_encoder_name: TypeDictNode+LapPE+RWSE
+  node_encoder_num_types: 28
   remove_feature: false
   resample_disjoint: false
   resample_negative: false
@@ -59,7 +59,7 @@ gnn:
   att_heads: 1
   batchnorm: true
   clear_feature: true
-  dim_inner: 384
+  dim_inner: 256
   dropout: 0.0
   head: san_graph
   keep_edge: 0.5
@@ -89,14 +89,14 @@ gt:
     max_position_embeddings: 128
     num_random_blocks: 3
     use_bias: false
-  dim_hidden: 384
+  dim_hidden: 256
   dropout: 0.1
   full_graph: true
   gamma: 1.0e-05
   layer_norm: false
   layer_type: CustomGatedGCN+Transformer
-  layers: 10
-  n_heads: 16
+  layers: 12
+  n_heads: 32
   pna_degrees: []
   residual: true
 mem:
@@ -105,7 +105,7 @@ metric_agg: argmin
 metric_best: mae
 model:
   edge_decoding: dot
-  graph_pooling: mean
+  graph_pooling: add
   loss_fun: l1
   match_upper: true
   size_average: mean
@@ -115,14 +115,14 @@ name_tag: ''
 num_threads: 6
 num_workers: 0
 optim:
-  base_lr: 0.0002
+  base_lr: 0.005
   batch_accumulation: 1
   clip_grad_norm: true
   lr_decay: 0.1
-  max_epoch: 150
+  max_epoch: 2500
   min_lr: 0.0
   momentum: 0.9
-  num_warmup_epochs: 10
+  num_warmup_epochs: 50
   optimizer: adamW
   reduce_factor: 0.1
   schedule_patience: 10
@@ -131,8 +131,8 @@ optim:
   - 30
   - 60
   - 90
-  weight_decay: 0.0
-out_dir: results
+  weight_decay: 1.0e-05
+out_dir: results/zinc-subset-GPSlarge-RWSE-LapPE-Transformer
 posenc_ElstaticSE:
   dim_pe: 16
   enable: false
@@ -165,30 +165,30 @@ posenc_HKdiagSE:
   post_layers: 0
   raw_norm_type: none
 posenc_LapPE:
-  dim_pe: 16
+  dim_pe: 4
   eigen:
     eigvec_norm: L2
-    laplacian_norm: sym
-    max_freqs: 10
-  enable: false
-  layers: 3
-  model: none
+    laplacian_norm: none
+    max_freqs: 1
+  enable: true
+  layers: 2
+  model: DeepSet
   n_heads: 4
   pass_as_var: false
   post_layers: 0
   raw_norm_type: none
 posenc_RWSE:
-  dim_pe: 16
-  enable: false
+  dim_pe: 24
+  enable: true
   kernel:
     times: []
-    times_func: ''
+    times_func: range(1,21)
   layers: 3
-  model: none
+  model: Linear
   n_heads: 4
   pass_as_var: false
   post_layers: 0
-  raw_norm_type: none
+  raw_norm_type: BatchNorm
 posenc_SignNet:
   dim_pe: 16
   eigen:
@@ -221,7 +221,7 @@ tensorboard_agg: true
 tensorboard_each_run: false
 train:
   auto_resume: false
-  batch_size: 1
+  batch_size: 64
   ckpt_best: false
   ckpt_clean: true
   ckpt_period: 100
@@ -250,5 +250,5 @@ view_emb: false
 wandb:
   entity: gtransformers
   name: ''
-  project: pcqm4m
+  project: ZINC
   use: false

@@ -35,6 +35,7 @@ results/zinc/zinc-subset-GPSlarge-RWSE-LapPE-Performer/0/ckpt/**
 results/zinc/zinc-subset-GPSsmall-RWSE-LapPE-Transformer/0/ckpt/**
 results/zinc/zinc-subset-GPSmedium-RWSE-LapPE-Transformer/0/ckpt/**
 results/zinc/zinc-subset-GPSlarge-RWSE-LapPE-Transformer/0/ckpt/**
+results/zinc-subset-GPSlarge-RWSE-LapPE-Transformer/0/ckpt/**
 
 results/zinc/zinc-subset-GPSsmall-RWSE-LapPE-BigBird/0/ckpt/**
 results/zinc/zinc-subset-GPSmedium-RWSE-LapPE-BigBird/0/ckpt/**
