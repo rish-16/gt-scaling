@@ -275,6 +275,7 @@ if __name__ == '__main__':
             print ("Size:", NN)
             start = time.time()
             y1 = model(batch)
+            print (batch.attn_profile_timings)
             print (y1.attn_profile_timings)
             end = time.time()
             print ("TOTAL RUNTIME", end - start)
