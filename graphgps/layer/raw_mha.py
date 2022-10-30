@@ -217,7 +217,7 @@ class RishAttention(nn.Module):
             "av": AV_END_TIME - AV_START_TIME
         }
 
-        pprint (attn_stats)
+        # pprint (attn_stats)
 
         return attn, attn_weights, attn_stats
 

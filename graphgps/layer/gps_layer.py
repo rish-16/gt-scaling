@@ -202,6 +202,7 @@ class GPSLayer(nn.Module):
             h = self.norm2(h)
 
         batch.x = h
+        batch.attn_profile_timings = attn_profiling_stats
         return batch
 
     def _sa_block(self, x, attn_mask, key_padding_mask):

@@ -264,6 +264,7 @@ if __name__ == '__main__':
                 with torch.no_grad():
                     start = time.time()
                     y1 = model(batch)
+                    print (y1.attn_profile_timings)
                     end = time.time()
                     print ("TOTAL RUNTIME", end - start)
                     print ()
