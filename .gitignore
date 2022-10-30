@@ -43,3 +43,5 @@ results/zinc/zinc-subset-GPSlarge-RWSE-LapPE-BigBird/0/ckpt/**
 
 datasets/**
 *.pickle
+
+results/zinc-subset-GPSlarge-RWSE-LapPE-BigBird/0/ckpt/**
