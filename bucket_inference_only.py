@@ -201,7 +201,7 @@ def custom_set_run_dir(cfg, run_id):
         makedirs_rm_exist(cfg.run_dir)    
 
 if __name__ == '__main__':
-    dataset = PygPCQM4Mv2Dataset()
+    # dataset = PygPCQM4Mv2Dataset()
     # dataset = dataset[]
     # train_loader = pyg.loader.DataLoader(dataset, batch_size=1, shuffle=False)
     # print(dataset)
@@ -233,7 +233,7 @@ if __name__ == '__main__':
         print (e)
     
     # print ("Saved pickle file")
-    pprint (per_size_batches)
+    pprint (per_size_batches.keys())
 
     args = parse_args()
     # Load config file
