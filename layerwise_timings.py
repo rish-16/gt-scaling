@@ -239,6 +239,9 @@ if __name__ == '__main__':
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
 
+        batch_data_list = batch.to_data_list()
+        print ("Number of samples:", len(batch_data_list))
+
         batch.to(DEVICE)
         batch.attn_profile_timings = []
         
