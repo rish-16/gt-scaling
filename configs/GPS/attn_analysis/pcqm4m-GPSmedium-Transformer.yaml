@@ -17,7 +17,7 @@ dataset:
   edge_encoder_name: Bond
   edge_encoder_bn: False
 pretrained:
-  dir: results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/0/ckpt/
+  dir: results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/
   reset_prediction_head: False
 train:
   mode: inference-only
