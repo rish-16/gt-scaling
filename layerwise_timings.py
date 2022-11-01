@@ -226,10 +226,6 @@ if __name__ == '__main__':
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
 
-        logging.info(f"[*] Run ID {run_id}: seed={cfg.seed}, "
-                     f"split_index={cfg.dataset.split_index}")
-        logging.info(f"    Starting now: {datetime.datetime.now()}")
-
         loaders = create_loader()
         train_loader = loaders[0]
         batch = next(iter(train_loader))
@@ -237,7 +233,6 @@ if __name__ == '__main__':
         model = create_model()
 
         cfg.params = params_count(model)
-        logging.info('Num parameters: %s', cfg.params)
 
         batch_data_list = batch.to_data_list()
         print ("Number of samples:", len(batch_data_list))
@@ -251,10 +246,10 @@ if __name__ == '__main__':
                 y1 = model(batch)
                 end = time.time()
                 TOTAL_TIME = end - start
-                print (TOTAL_TIME)
         except Exception as e:
             print (e)
     
         gps_layers = []
         TIMINGS = batch.attn_profile_timings
         pprint (TIMINGS)
+        print (TOTAL_TIME)
