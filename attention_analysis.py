@@ -234,7 +234,7 @@ if __name__ == '__main__':
         # train_loader = loaders[0]
 
         model = create_model()
-        MODEL_PATH = "results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/0/ckpt/99.pt"
+        MODEL_PATH = "results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/0/ckpt/99.ckpt"
         model.load_state_dict(torch.load(MODEL_PATH))
         model.eval()
         print (model)
