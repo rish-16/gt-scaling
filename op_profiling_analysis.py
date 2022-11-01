@@ -10,7 +10,9 @@ font = {'family' : 'normal',
 matplotlib.rc('font', **font)
 matplotlib.rc('legend', **{"loc": "upper left"})
 
-PATH = "op_bucket_timing2.json"
+PATH = "op_bucket_timing2.json" # PATH2 by default
+PATH3 = "op_bucket_timing3.json"
+PATH4 = "op_bucket_timing4.json"
 
 with open(PATH, "r") as f:
     op_dict = json.load(f)
@@ -20,11 +22,12 @@ dot = []
 softmax = []
 av = []
 
-for nnodes, timings in op_dict.items():
+for nnodes, record in op_dict.items():
+    record = record[0]
     graph_sizes.append(nnodes)
-    dot.append(timings["qk"])    
-    softmax.append(timings["softmax"])
-    av.append(timings["av"])
+    dot.append(record["attention_ops"]["qk"])
+    softmax.append(record["attention_ops"]["softmax"])
+    av.append(record["attention_ops"]["av"])
 
 grp_data = list(zip(graph_sizes, dot, softmax, av))
 grp_data.sort(key=lambda rec : rec[0]) # sort by graph size
