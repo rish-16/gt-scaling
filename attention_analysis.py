@@ -258,7 +258,7 @@ if __name__ == '__main__':
         attn_weights = batch.batch_attention_weights
         for i in range(attn_weights.size(0)):
             sample = data_list[i]
-            attn_scores = attn_scores[i]
+            attn_scores = attn_weights[i]
             assert attn_scores.size(0) == attn_weights.size(1) and attn_scores.size(1) == attn_weights.size(2)
             print ("features:")
             print ([sample.x[i][0] for i in range(len(sample.size(0)))])
