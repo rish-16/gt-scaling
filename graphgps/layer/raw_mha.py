@@ -59,6 +59,8 @@ class RishAttention(nn.Module):
 
         self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias)
 
+        self.attn_matrix = None
+
         self.reset_parameters()
 
     def reset_parameters(self):
@@ -186,6 +188,9 @@ class RishAttention(nn.Module):
         SOFTMAX_START_TIME = time.time()
         attn_weights_float = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32)
         SOFTMAX_END_TIME = time.time()
+
+        self.attn_matrix = attn_weights_float
+
         # print ("******softmax time:", SOFTMAX_END_TIME - SOFTMAX_START_TIME)
         attn_weights = attn_weights_float.type_as(attn_weights)
         attn_probs = self.dropout_module(attn_weights)

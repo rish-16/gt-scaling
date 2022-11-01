@@ -80,9 +80,9 @@ class GPSLayer(nn.Module):
         if global_model_type == 'None':
             self.self_attn = None
         elif global_model_type == 'Transformer':
-            # self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
+            self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
 
-            self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
+            # self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
         elif global_model_type == 'Performer':
             self.self_attn = SelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, causal=False)
         elif global_model_type == "BigBird":
@@ -170,9 +170,9 @@ class GPSLayer(nn.Module):
         if self.self_attn is not None:
             h_dense, mask = to_dense_batch(h, batch.batch)
             if self.global_model_type == 'Transformer':
-                # h_attn = self._sa_block(h_dense, None, ~mask)[mask]
-                h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
-                h_attn = h_attn[mask]
+                h_attn, batch_attn_weights = self._sa_block(h_dense, None, ~mask)[mask]
+                # h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
+                # h_attn = h_attn[mask]
             elif self.global_model_type == 'Performer':
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == "Linformer":
@@ -203,16 +203,18 @@ class GPSLayer(nn.Module):
 
         batch.x = h
         batch.attn_profile_timings = attn_profiling_stats
+        batch.batch_attention_weights = batch_attn_weights
         return batch
 
     def _sa_block(self, x, attn_mask, key_padding_mask):
         """Self-attention block.
         """
-        x = self.self_attn(x, x, x,
+        x, attn_weights = self.self_attn(x, x, x,
                            attn_mask=attn_mask,
                            key_padding_mask=key_padding_mask,
-                           need_weights=False)[0]
-        return x
+                           need_weights=True,
+                           average_attn_weights=True)
+        return x, attn_weights
 
     def _ff_block(self, x):
         """Feed Forward block.
