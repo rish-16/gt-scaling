@@ -1,4 +1,5 @@
 import json, math
+from pprint import pprint
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -17,6 +18,9 @@ PATH4 = "op_bucket_timing4.json"
 with open(PATH, "r") as f:
     op_dict = json.load(f)
 
+with open(PATH3, "r") as f3:
+    op_dict3 = json.load(f3)    
+
 graph_sizes = []
 dot = []
 softmax = []
@@ -28,6 +32,17 @@ for nnodes, record in op_dict.items():
     dot.append(record["attention_ops"]["qk"])
     softmax.append(record["attention_ops"]["softmax"])
     av.append(record["attention_ops"]["av"])
+
+for i, (nnodes, record) in enumerate(op_dict3.items()):
+    pprint (record)
+    record = record[0]
+    dot[i] += record["attention_ops"]["qk"]
+    softmax[i] += record["attention_ops"]["softmax"]
+    av[i] += record["attention_ops"]["av"]
+
+    dot[i] /= 2
+    softmax[i] /= 2
+    av[i] /= 2
 
 grp_data = list(zip(graph_sizes, dot, softmax, av))
 grp_data.sort(key=lambda rec : rec[0]) # sort by graph size
