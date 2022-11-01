@@ -84,8 +84,8 @@ class GPSLayer(nn.Module):
         if global_model_type == 'None':
             self.self_attn = None
         elif global_model_type == 'Transformer':
-            self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
-            # self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
+            # self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
+            self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
         elif global_model_type == 'Performer':
             self.self_attn = SelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, causal=False)
         elif global_model_type == "BigBird":
@@ -174,13 +174,13 @@ class GPSLayer(nn.Module):
         if self.self_attn is not None:
             h_dense, mask = to_dense_batch(h, batch.batch)
             if self.global_model_type == 'Transformer':
+                # h_attn, batch_attn_weights = self._sa_block(h_dense, None, ~mask)
+                # h_attn = h_attn[mask]
                 GLOBAL_MP_START = time.time()
-                h_attn, batch_attn_weights = self._sa_block(h_dense, None, ~mask)
+                h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
                 GLOBAL_MP_END = time.time()
                 attn_profile_timings["global_mp"] = GLOBAL_MP_END - GLOBAL_MP_START
                 h_attn = h_attn[mask]
-                # h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
-                # h_attn = h_attn[mask]
             elif self.global_model_type == 'Performer':
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == "Linformer":
