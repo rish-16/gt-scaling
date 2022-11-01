@@ -19,7 +19,10 @@ with open(PATH, "r") as f:
     op_dict = json.load(f)
 
 with open(PATH3, "r") as f3:
-    op_dict3 = json.load(f3)    
+    op_dict3 = json.load(f3)
+
+with open(PATH4, "r") as f4:
+    op_dict4 = json.load(f4)           
 
 graph_sizes = []
 dot = []
@@ -40,9 +43,16 @@ for i, (nnodes, record) in enumerate(op_dict3.items()):
     softmax[i] += record["attention_ops"]["softmax"]
     av[i] += record["attention_ops"]["av"]
 
-    dot[i] /= 2
-    softmax[i] /= 2
-    av[i] /= 2
+for i, (nnodes, record) in enumerate(op_dict4.items()):
+    pprint (record)
+    record = record[0]
+    dot[i] += record["attention_ops"]["qk"]
+    softmax[i] += record["attention_ops"]["softmax"]
+    av[i] += record["attention_ops"]["av"]
+
+    dot[i] /= 3
+    softmax[i] /= 3
+    av[i] /= 3
 
 grp_data = list(zip(graph_sizes, dot, softmax, av))
 grp_data.sort(key=lambda rec : rec[0]) # sort by graph size
