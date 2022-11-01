@@ -11,13 +11,13 @@ dataset:
   task_type: regression
   transductive: False
   node_encoder: True
-  node_encoder_name: Atom+LapPE
+  node_encoder_name: Atom+LapPE+RWSE+SignNet
   node_encoder_bn: False
   edge_encoder: True
   edge_encoder_name: Bond
   edge_encoder_bn: False
 pretrained:
-  dir: results/pese/pcqm4m-full-GPSmedium-Transformer-2-PESE/
+  dir: results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/
   reset_prediction_head: False
 train:
   mode: inference-only
