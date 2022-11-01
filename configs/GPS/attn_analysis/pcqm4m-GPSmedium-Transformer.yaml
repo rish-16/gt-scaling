@@ -6,18 +6,18 @@ wandb:
   project: scratch  # W&B project for debugging runs.
 dataset:
   format: OGB
-  name: PCQM4Mv2-full
+  name: PCQM4Mv2-subset
   task: graph
   task_type: regression
   transductive: False
   node_encoder: True
-  node_encoder_name: Atom
+  node_encoder_name: Atom+RWSE+LapPE
   node_encoder_bn: False
   edge_encoder: True
   edge_encoder_name: Bond
   edge_encoder_bn: False
 pretrained:
-  dir: results/variants/pcqm4m-subset-GPSmedium-RWSE-LapPE-
+  dir: results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/0/ckpt/
   reset_prediction_head: False
 train:
   mode: inference-only
