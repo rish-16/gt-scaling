@@ -247,7 +247,9 @@ if __name__ == '__main__':
         logging.info('Num parameters: %s', cfg.params)
 
         data_list = None
+        batch = None
         for bi, batch in enumerate(train_loader):
+            batch.to(torch.device(cfg.device))
             data_list = batch.to_data_list()
             pred = model(batch)
             print (batch.batch_attention_weights.shape) # [5, 4, L, L]
