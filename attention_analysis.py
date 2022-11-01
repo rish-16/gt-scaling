@@ -233,48 +233,16 @@ if __name__ == '__main__':
         # loaders = create_loader()
         # train_loader = loaders[0]
 
+        if cfg.pretrained.dir:
+            cfg = load_pretrained_model_cfg(cfg)
+
         model = create_model()
-        MODEL_PATH = "results/pese/pcqm4m-full-GPSmedium-Transformer-4-PESE/0/ckpt/99.ckpt"
-        model.load_state_dict(torch.load(MODEL_PATH))
-        model.eval()
-        print (model)
+        if cfg.pretrained.dir:
+            model = init_model_from_pretrained(
+                model, cfg.pretrained.dir, cfg.pretrained.freeze_main,
+                cfg.pretrained.reset_prediction_head
+            )
 
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
-
-        # with open('PCQFULL_3M_AtomEncoder_dataset.pickle', 'rb') as f:
-        #     per_size_batches = pickle.load(f)
-
-        # print (per_size_batches.keys())
-
-        # for n_nodes, cur_batch in per_size_batches.items():
-        #     sample = cur_batch
-        #     per_size_batches[n_nodes] = [sample for _ in range(BS)]
-
-        # for i in range(1, 10):
-        #     if i in per_size_batches:
-        #         del per_size_batches[i]
-        # print ("deleted single digit keys < 10")
-
-        # TIMINGS = {}
-        # for NN, cur_batch_list in per_size_batches.items():
-        #     temp = []
-        #     sample = cur_batch_list[0]
-        #     batch_list = [sample for _ in range(BS)]
-        #     batch = pyg.data.Batch.from_data_list(batch_list)
-        #     batch.to(DEVICE)
-            
-        #     try:
-        #         print ("Size:", NN)
-        #         with torch.no_grad():
-        #             start = time.time()
-        #             y1 = model(batch)
-        #             TIMINGS[NN] = batch.attn_profile_timings
-        #             end = time.time()
-        #     except Exception as e:
-        #         print (NN, e)
-
-        # with open("op_bucket_timing.json", "a") as f:
-        #     json.dump(TIMINGS, f)
-        # print ("Saved timings")
 
