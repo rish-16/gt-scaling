@@ -230,8 +230,8 @@ if __name__ == '__main__':
                      f"split_index={cfg.dataset.split_index}")
         logging.info(f"    Starting now: {datetime.datetime.now()}")
 
-        # loaders = create_loader()
-        # train_loader = loaders[0]
+        loaders = create_loader()
+        train_loader = loaders[0]
 
         if cfg.pretrained.dir:
             cfg = load_pretrained_model_cfg(cfg)
@@ -246,3 +246,11 @@ if __name__ == '__main__':
         cfg.params = params_count(model)
         logging.info('Num parameters: %s', cfg.params)
 
+        data_list = None
+        for bi, batch in enumerate(train_loader):
+            data_list = batch.to_data_list()
+            pred = model(batch)
+            print (batch.batch_attention_weights.shape) # [5, 4, L, L]
+            break # end after one batch
+
+        pprint (data_list)

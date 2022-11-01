@@ -6,7 +6,7 @@ wandb:
   project: scratch  # W&B project for debugging runs.
 dataset:
   format: OGB
-  name: PCQM4Mv2-full
+  name: PCQM4Mv2-subset
   task: graph
   task_type: regression
   transductive: False
