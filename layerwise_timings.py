@@ -252,4 +252,4 @@ if __name__ == '__main__':
         gps_layers = []
         TIMINGS = batch.attn_profile_timings
         pprint (TIMINGS)
-        print (TOTAL_TIME)
+        print (TOTAL_TIME)        
