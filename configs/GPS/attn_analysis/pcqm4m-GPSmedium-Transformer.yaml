@@ -21,7 +21,7 @@ pretrained:
   reset_prediction_head: False
 train:
   mode: inference-only
-  batch_size: 5
+  batch_size: 20
 model:
   type: GPSModel
   loss_fun: l1

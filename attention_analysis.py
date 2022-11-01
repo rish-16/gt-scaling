@@ -255,16 +255,20 @@ if __name__ == '__main__':
             print (batch.batch_attention_weights.shape) # [5, 4, L, L]
             break # end after one batch
 
+        DATA_PICKLE = {}
+
         attn_weights = batch.batch_attention_weights
         for i in range(attn_weights.size(0)):
             sample = data_list[i]
             print (sample)
             attn_scores = attn_weights[i]
             assert attn_scores.size(0) == attn_weights.size(1) and attn_scores.size(1) == attn_weights.size(2)
-            print ("features:")
+            # print ("features:")
             print ([sample.x[i][0] for i in range(sample.size(0))])
-            print ("scores:")
+            # print ("scores:")
             print (attn_scores)
-            print()
-            print()
-            print()
+
+            DATA_PICKLE[i] = [sample, attn_scores]
+
+        with open("MOL_ATTN_SCORE.pickle", "wb") as f:
+            pickle.dump(DATA_PICKLE, f, protocol=pickle.HIGHEST_PROTOCOL)
