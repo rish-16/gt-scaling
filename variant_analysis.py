@@ -78,10 +78,23 @@ for path in bigbird_paths_test:
         bigbird_mae.append(mae)
         bigbird_time.append(time)
 
-# ---------------------------------------------------------------------------------------------        
+# ---------------------------------------------------------------------------------------------
 
 fig = plt.figure()
-ax = fig.add_subplot(111)
+ax = fig.add_subplot(121)
+
+ax.plot(transformer_time, transformer_mae, marker="o", markersize=10, color="red")
+for i, xy in enumerate(zip(transformer_time, transformer_mae)):
+    ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
+ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="blue")
+for i, xy in enumerate(zip(performer_time, performer_mae)):
+    ax.annotate(f'PF-{classes[i]}', xy=xy, textcoords='data')
+
+ax.grid(linestyle="dashed")
+plt.xlabel("Test Set Inference Runtime / sec")
+plt.ylabel("Test MAE")
+
+ax = fig.add_subplot(122)
 
 ax.plot(transformer_time, transformer_mae, marker="o", markersize=10, color="red")
 for i, xy in enumerate(zip(transformer_time, transformer_mae)):
@@ -90,26 +103,9 @@ ax.plot(bigbird_time, bigbird_mae, marker="+", markersize=10, color="green")
 for i, xy in enumerate(zip(bigbird_time, bigbird_mae)):
     ax.annotate(f'BB-{classes[i]}', xy=xy, textcoords='data')
 
-ax.grid()
-plt.xlabel("Inference Time (s)")
-plt.ylabel("Test MAE")
-plt.title("PCQM4Mv2-Subset | Transformer vs BigBird")
+ax.grid(linestyle="dashed")
+plt.xlabel("Test Set Inference Runtime / sec")
+# plt.ylabel("Test MAE")
+
 plt.show()
-
-# ---------------------------------------------------------------------------------------------
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-ax.plot(transformer_time, transformer_mae, marker="o", markersize=10, color="red")
-for i, xy in enumerate(zip(transformer_time, transformer_mae)):
-    ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
-ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="green")
-for i, xy in enumerate(zip(performer_time, performer_mae)):
-    ax.annotate(f'PF-{classes[i]}', xy=xy, textcoords='data')
-
-ax.grid()
-plt.xlabel("Inference Time (s)")
-plt.ylabel("Test MAE")
-plt.title("PCQM4Mv2-Subset | Transformer vs Performer")
-plt.show()
+fig.savefig("figures/tradeoff/pcqm4m_combined_comparison.pdf", dpi=400, bbox_inches='tight')

@@ -6,7 +6,7 @@ import networkx as nx
 import torch_geometric as tg
 
 font = {'family' : 'normal',
-        'size'   : 8}
+        'size'   : 15}
 
 matplotlib.rc('font', **font)
 
@@ -29,8 +29,8 @@ with open(PATH, "rb") as f:
 
 print (data.keys())
 
-fig, axs = plt.subplots(3, 2)
-fig.suptitle('Molecule Attention Scores')
+fig, axs = plt.subplots(2, 3)
+# fig.suptitle('Molecule Attention Scores')
 for i in range(3):
     sample = data[i][0]
     # atomic_numbers = [sample.x[j][0] for j in range(sample.x.size(0))]
@@ -41,12 +41,17 @@ for i in range(3):
 
     scores = data[i][1].detach().numpy()
     
-    axs[i, 0].imshow(adj_mat, cmap="gray")
-    axs[i, 1].imshow(scores, cmap="Reds")
+    axs[0, i].imshow(adj_mat, cmap="gray")
+    axs[1, i].imshow(scores, cmap="YlGn")
     
-    new_list = range(math.floor(min(range(0, sample.x.size(0)))), math.ceil(max(range(0, sample.x.size(0))))+1)
-    axs[i, 0].set_xticks(new_list)
-    axs[i, 0].set_yticks(new_list)
-    axs[i, 1].set_xticks(new_list)
-    axs[i, 1].set_yticks(new_list)
+    # new_list = range(math.floor(min(range(0, sample.x.size(0)))), math.ceil(max(range(0, sample.x.size(0))))+1)
+    # axs[0, i].set_xticks(new_list)
+    # axs[0, i].set_yticks(new_list)
+    # axs[1, i].set_xticks(new_list)
+    # axs[1, i].set_yticks(new_list)
+    
+    axs[0, i].set_title(f"Adjacency Matrix {i+1}")
+    axs[1, i].set_title(f"Attention Matrix {i+1}")
 plt.show()
+
+fig.savefig("figures/attn/mol_attn_scores.pdf", dpi=400, bbox_inches="tight")

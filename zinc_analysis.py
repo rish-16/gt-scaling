@@ -84,39 +84,34 @@ for path in bigbird_paths_test:
 # ---------------------------------------------------------------------------------------------        
 
 fig = plt.figure()
-ax = fig.add_subplot(111)
+ax = fig.add_subplot(121)
 
 ax.plot(transformer_time, transformer_mae, marker="o", markersize=10, color="red", label="Transformer (TF)")
 for i, xy in enumerate(zip(transformer_time, transformer_mae)):
     ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
+
+ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="blue", label="Performer (PF)")
+for i, xy in enumerate(zip(performer_time, performer_mae)):
+    ax.annotate(f'PF-{classes[i]}', xy=xy, textcoords='data') 
+
+ax.grid(linestyle="dashed")
+plt.xlabel("Test Set Inference Runtime / sec")
+plt.ylabel("Test MAE")
+# plt.legend()
+
+ax = fig.add_subplot(122)
+
+ax.plot(transformer_time, transformer_mae, marker="o", markersize=10, color="red", label="Transformer (TF)")
+for i, xy in enumerate(zip(transformer_time, transformer_mae)):
+    ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
+
 ax.plot(bigbird_time, bigbird_mae, marker="+", markersize=10, color="green", label="BigBird (BB)")
 for i, xy in enumerate(zip(bigbird_time, bigbird_mae)):
     ax.annotate(f'BB-{classes[i]}', xy=xy, textcoords='data')
-ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="blue", label="Performer (PF)")
-for i, xy in enumerate(zip(performer_time, performer_mae)):
-    ax.annotate(f'PF-{classes[i]}', xy=xy, textcoords='data')    
 
-ax.grid()
-plt.xlabel("Inference Time (s)")
-plt.ylabel("Test MAE")
-plt.title("ZINC | Transformer vs Linear Variants")
-plt.legend()
+ax.grid(linestyle="dashed")
+plt.xlabel("Test Set Inference Runtime / sec")
+# plt.legend()
+
 plt.show()
-
-# ---------------------------------------------------------------------------------------------
-
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-
-# ax.plot(transformer_time, transformer_mae, marker="o", markersize=10, color="red")
-# for i, xy in enumerate(zip(transformer_time, transformer_mae)):
-#     ax.annotate(f'TF-{classes[i]}', xy=xy, textcoords='data')
-# ax.plot(performer_time, performer_mae, marker="+", markersize=10, color="green")
-# for i, xy in enumerate(zip(performer_time, performer_mae)):
-#     ax.annotate(f'Pf-{classes[i]}', xy=xy, textcoords='data')
-
-# ax.grid()
-# plt.xlabel("Inference Time (s)")
-# plt.ylabel("Test MAE")
-# plt.title("ZINC | Transformer vs Performer")
-# plt.show()
+fig.savefig("figures/tradeoff/zinc_combined_comparison.pdf", dpi=400, bbox_inches='tight')

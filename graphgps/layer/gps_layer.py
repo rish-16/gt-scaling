@@ -34,6 +34,8 @@ class GPSLayer(nn.Module):
         self.batch_norm = batch_norm
         self.equivstable_pe = equivstable_pe
 
+        self.layer_profiling_stats = None
+
         # Local message-passing model.
         if local_gnn_type == 'None':
             self.local_model = None
@@ -81,7 +83,6 @@ class GPSLayer(nn.Module):
             self.self_attn = None
         elif global_model_type == 'Transformer':
             self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
-
             # self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
         elif global_model_type == 'Performer':
             self.self_attn = SelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, causal=False)
@@ -90,13 +91,6 @@ class GPSLayer(nn.Module):
             bigbird_cfg.n_heads = num_heads
             bigbird_cfg.dropout = dropout
             self.self_attn = SingleBigBirdLayer(bigbird_cfg)
-        elif global_model_type == "FunnelTransformer":
-            raise NotImplementedError(f"FunnelTransformer not implemented yet.")
-        elif global_model_type == "Linformer":
-            # raise NotImplementedError(f"Linformer not implemented yet.")
-            self.self_attn = LinformerAttention(dim=dim_h, heads=num_heads, max_seq_len=42, k=256)
-        elif global_model_type == "Reformer":
-            raise NotImplementedError(f"Reformer not implemented yet.")
         else:
             raise ValueError(f"Unsupported global x-former model: "
                              f"{global_model_type}")
@@ -136,6 +130,8 @@ class GPSLayer(nn.Module):
         h = batch.x
         h_in1 = h  # for first residual connection
 
+        attn_profile_timings = {}
+
         h_out_list = []
         # Local MPNN with edge attributes.
         if self.local_model is not None:
@@ -144,11 +140,14 @@ class GPSLayer(nn.Module):
                 es_data = None
                 if self.equivstable_pe:
                     es_data = batch.pe_EquivStableLapPE
+                LOCAL_MP_START = time.time()
                 local_out = self.local_model(Batch(batch=batch,
                                                    x=h,
                                                    edge_index=batch.edge_index,
                                                    edge_attr=batch.edge_attr,
                                                    pe_EquivStableLapPE=es_data))
+                LOCAL_MP_END = time.time()
+                attn_profile_timings["local_mp"] = LOCAL_MP_END - LOCAL_MP_START 
                 # GatedGCN does residual connection and dropout internally.
                 h_local = local_out.x
                 batch.edge_attr = local_out.edge_attr
@@ -156,7 +155,10 @@ class GPSLayer(nn.Module):
                 if self.equivstable_pe:
                     h_local = self.local_model(h, batch.edge_index, batch.edge_attr, batch.pe_EquivStableLapPE)
                 else:
+                    LOCAL_MP_START = time.time()
                     h_local = self.local_model(h, batch.edge_index, batch.edge_attr)
+                    LOCAL_MP_END = time.time()
+                    attn_profile_timings["local_mp"] = LOCAL_MP_END - LOCAL_MP_START
                 h_local = self.dropout_local(h_local)
                 h_local = h_in1 + h_local  # Residual connection.
 
@@ -170,7 +172,10 @@ class GPSLayer(nn.Module):
         if self.self_attn is not None:
             h_dense, mask = to_dense_batch(h, batch.batch)
             if self.global_model_type == 'Transformer':
+                GLOBAL_MP_START = time.time()
                 h_attn, batch_attn_weights = self._sa_block(h_dense, None, ~mask)
+                GLOBAL_MP_END = time.time()
+                attn_profile_timings["global_mp"] = GLOBAL_MP_END - GLOBAL_MP_START
                 h_attn = h_attn[mask]
                 # h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
                 # h_attn = h_attn[mask]
@@ -202,9 +207,12 @@ class GPSLayer(nn.Module):
         if self.batch_norm:
             h = self.norm2(h)
 
+        pprint (attn_profile_timings)
+
         batch.x = h
-        # batch.attn_profile_timings = attn_profiling_stats
-        batch.batch_attention_weights = batch_attn_weights
+        self.layer_profiling_stats = attn_profiling_stats
+        batch.attn_profile_timings.append(attn_profiling_stats)
+        # batch.batch_attention_weights = batch_attn_weights
         return batch
 
     def _sa_block(self, x, attn_mask, key_padding_mask):

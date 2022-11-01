@@ -38,27 +38,25 @@ for path in PESE_PATHS_TRAIN:
 # plt.show()
 
 fig = plt.figure()
-ax = fig.add_subplot(111)
+ax = fig.add_subplot(121)
+
+new_list = range(math.floor(min(pese_counts)), math.ceil(max(pese_counts))+1)
+plt.xticks(new_list)
+
+ax.plot(pese_counts, train_mae, marker="*", markersize=10, color="orange")
+plt.grid(linestyle="dashed")
+plt.xlabel("Number of PESE concatenated")
+plt.ylabel("Train MAE")
+
+ax = fig.add_subplot(122)
 
 new_list = range(math.floor(min(pese_counts)), math.ceil(max(pese_counts))+1)
 plt.xticks(new_list)
 
 ax.plot(pese_counts, test_mae, marker="o", markersize=10, color="red")
-ax.grid()
+plt.grid(linestyle="dashed")
 plt.xlabel("Number of PESE concatenated")
 plt.ylabel("Test MAE")
-plt.title("PCQM4Mv2-Full | GatedGCN + Transformer")
+
 plt.show()
-
-fig = plt.figure()
-ax = fig.add_subplot(111)
-
-new_list = range(math.floor(min(pese_counts)), math.ceil(max(pese_counts))+1)
-plt.xticks(new_list)
-
-ax.plot(pese_counts, train_mae, marker="o", markersize=10, color="red")
-ax.grid()
-plt.xlabel("Number of PESE concatenated")
-plt.ylabel("Train MAE")
-plt.title("PCQM4Mv2-Full | GatedGCN + Transformer")
-plt.show()
+fig.savefig("figures/pese/pcqm4m_combined_compaison.pdf", dpi=400, bbox_inches='tight')

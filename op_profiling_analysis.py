@@ -30,20 +30,21 @@ grp_data = list(zip(graph_sizes, dot, softmax, av))
 grp_data.sort(key=lambda rec : rec[0]) # sort by graph size
 
 graph_sizes = [rec[0] for rec in grp_data]
-dot = [rec[1] for rec in grp_data]
-softmax = [rec[2] for rec in grp_data]
-av = [rec[3] for rec in grp_data]
+dot = [rec[1] * 128 for rec in grp_data]
+softmax = [rec[2] * 128 for rec in grp_data]
+av = [rec[3] * 128 for rec in grp_data]
 
 df = pd.DataFrame({
     "Q.T @ K": dot,
     "Softmax": softmax,
     "A @ V": av,
 }, index=graph_sizes)
-df.plot.bar(stacked=True)
-plt.xlabel("Number of nodes (N)")
-plt.ylabel("Operation Time (B=128) / sec")
+plot = df.plot.bar(stacked=True)
+plt.xlabel("Number of atoms")
+plt.ylabel("$O(n^2)$ Attention Operation Runtime / sec")
 plt.show()
 
+plot.get_figure().savefig("figures/scaling/pcqm4m_op_runtime.pdf", format="pdf")
 
 # "18": {
 #     "qk": 0.00010085105895996094,

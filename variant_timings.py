@@ -85,8 +85,11 @@ df = pd.DataFrame([
     ['L','BigBird', large_times[2]]
 ], columns=['Scale','Models', 'val'])
 
-df.pivot("Models", "Scale", "val").plot(kind='bar')
-
-plt.title("PCQM4Mv2-Subset Test Inference Times")
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+plot = df.pivot("Models", "Scale", "val").plot(kind='bar')
+# plt.title("PCQM4Mv2-Subset Test Inference Times")
 plt.xticks(rotation = 0)
+plt.ylabel("Test Inference Runtime / sec")
 plt.show()
+plot.get_figure().savefig("figures/tradeoff/pcqm4m_test_inf_time_all_models.pdf", format="pdf")

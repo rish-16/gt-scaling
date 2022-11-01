@@ -446,38 +446,43 @@ bigbird_y = np.asarray(bigbird_y)
 bigbird_y_avg = bigbird_y.mean(axis=1)
 bigbird_y_std = bigbird_y.std(axis=1)
 
-xint = range(min(transformer_x), math.ceil(max(transformer_x))+1)
-matplotlib.pyplot.xticks(xint)
+fig = plt.figure()
+ax = fig.add_subplot(111)
 
-plt.plot(transformer_x, transformer_y_avg, color="green", label="Transformer", markersize=10)
+# xint = range(min(transformer_x), math.ceil(max(transformer_x))+1)
+# matplotlib.pyplot.xticks(xint)
+
+plt.plot(transformer_x, transformer_y_avg, color="red", label="GPS-Transformer-M", markersize=10)
 plt.fill_between(
     transformer_x,
     np.asarray(transformer_y_avg) - np.asarray(transformer_y_std), 
     np.asarray(transformer_y_avg) + np.asarray(transformer_y_std),
     alpha=0.3,
-    color="green"
+    color="red"
 )
 
-plt.plot(performer_x, performer_y_avg, color="red", label="Performer", markersize=10)
+plt.plot(performer_x, performer_y_avg, color="blue", label="GPS-Performer-M", markersize=10)
 plt.fill_between(
     performer_x,
     np.asarray(performer_y_avg) - np.asarray(performer_y_std),
     np.asarray(performer_y_avg) + np.asarray(performer_y_std),
     alpha=0.3,
-    color="red"
+    color="blue"
 )
 
-plt.plot(bigbird_x, bigbird_y_avg, color="blue", label="BigBird")
+plt.plot(bigbird_x, bigbird_y_avg, color="green", label="GPS-BigBird-M")
 plt.fill_between(
     bigbird_x,
     np.asarray(bigbird_y_avg) - np.asarray(bigbird_y_std),
     np.asarray(bigbird_y_avg) + np.asarray(bigbird_y_std),
     alpha=0.3,
-    color="cyan"
+    color="green"
 )
 
-plt.xlabel("Number of nodes (N)")
-plt.ylabel("Batch inference time (B = 128)")
+plt.xlabel("Number of atoms")
+plt.ylabel("Batch Inference Runtime (B = 128) / sec")
 plt.legend()
-plt.grid()
+plt.grid(linestyle="dashed")
 plt.show()
+
+fig.savefig("figures/scaling/pcqm4m_variant_scaling_graph_size.pdf", dpi=400, bbox_inches='tight')
