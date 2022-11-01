@@ -10,7 +10,7 @@ font = {'family' : 'normal',
 matplotlib.rc('font', **font)
 matplotlib.rc('legend', **{"loc": "upper left"})
 
-PATH = "op_bucket_timing.json"
+PATH = "op_bucket_timing2.json"
 
 with open(PATH, "r") as f:
     op_dict = json.load(f)
