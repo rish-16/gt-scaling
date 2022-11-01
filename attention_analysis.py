@@ -10,3 +10,7 @@ matplotlib.rc('font', **font)
 
 PATH = "MOL_ATTN_SCORE.pickle"
 
+with open(PATH, "rb") as f:
+    data = pickle.load(f)
+
+print (data.keys())
