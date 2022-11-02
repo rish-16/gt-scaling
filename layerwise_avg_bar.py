@@ -272,7 +272,7 @@ if __name__ == '__main__':
         with open('PCQFULL_3M_AtomEncoder_dataset.pickle', 'rb') as f:
             per_size_batches = pickle.load(f)
 
-        print (per_size_batches.keys())
+        print (per_size_batches[18])
 
         TIMINGS = {}
         for NN, cur_batch_list in per_size_batches.items():
