@@ -177,8 +177,10 @@ class GPSLayer(nn.Module):
                 # h_attn, batch_attn_weights = self._sa_block(h_dense, None, ~mask)
                 # h_attn = h_attn[mask]
                 GLOBAL_MP_START = time.time()
-                h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
+                # h_attn, _, attn_profiling_stats = self.self_attn(h_dense, h_dense, h_dense, attn_mask=None, key_padding_mask=~mask)
+                h_attn, batch_attn_weights = self._sa_block(h_dense, None, ~mask)
                 GLOBAL_MP_END = time.time()
+                h_attn = h_attn[mask]
                 attn_profile_timings["global_mp"] = GLOBAL_MP_END - GLOBAL_MP_START
                 h_attn = h_attn[mask]
             elif self.global_model_type == 'Performer':
@@ -211,8 +213,8 @@ class GPSLayer(nn.Module):
 
         batch.x = h
         # self.layer_profiling_stats = attn_profile_timings
-        # attn_profile_timings["attention_ops"] = attn_profiling_stats
-        # batch.attn_profile_timings.append(attn_profile_timings)
+        attn_profile_timings["attention_ops"] = attn_profiling_stats
+        batch.attn_profile_timings.append(attn_profile_timings)
         # batch.batch_attention_weights = batch_attn_weights
         return batch
 
