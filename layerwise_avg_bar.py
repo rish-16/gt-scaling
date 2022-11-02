@@ -284,22 +284,22 @@ if __name__ == '__main__':
             batch.to(DEVICE)
             batch.attn_profile_timings = []
             
-            try:
-                with torch.no_grad():
-                    start = time.time()
-                    y1 = model(batch)
-                    end = time.time()
-                    batch_timings = batch.attn_profile_timings
+            # try:
+            with torch.no_grad():
+                start = time.time()
+                y1 = model(batch)
+                end = time.time()
+                batch_timings = batch.attn_profile_timings
 
-                    avg_gmp, avg_lmp = GET_AVG_BATCH_STATS(batch_timings)
+                avg_gmp, avg_lmp = GET_AVG_BATCH_STATS(batch_timings)
 
-                    TIMINGS[NN] = {
-                        "avg_global": avg_gmp,
-                        "avg_local": avg_lmp,
-                        "total": end - start
-                    }
-            except Exception as e:
-                print (NN, e)
+                TIMINGS[NN] = {
+                    "avg_global": avg_gmp,
+                    "avg_local": avg_lmp,
+                    "total": end - start
+                }
+            # except Exception as e:
+            #     print (NN, e)
 
             del batch
 
