@@ -277,7 +277,7 @@ if __name__ == '__main__':
         TIMINGS = {}
         for NN, cur_batch_list in per_size_batches.items():
             temp = []
-            sample = cur_batch_list[0]
+            sample = cur_batch_list
             # print (sample)
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
