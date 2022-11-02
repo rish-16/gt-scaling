@@ -84,8 +84,8 @@ class GPSLayer(nn.Module):
         if global_model_type == 'None':
             self.self_attn = None
         elif global_model_type == 'Transformer':
-            # self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
-            self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
+            self.self_attn = torch.nn.MultiheadAttention(dim_h, num_heads, dropout=self.attn_dropout, batch_first=True)
+            # self.self_attn = RishAttention(dim_h, num_heads, dropout=self.attn_dropout)
         elif global_model_type == 'Performer':
             self.self_attn = SelfAttention(dim=dim_h, heads=num_heads, dropout=self.attn_dropout, causal=False)
         elif global_model_type == "BigBird":
