@@ -182,7 +182,6 @@ class GPSLayer(nn.Module):
                 GLOBAL_MP_END = time.time()
                 h_attn = h_attn[mask]
                 attn_profile_timings["global_mp"] = GLOBAL_MP_END - GLOBAL_MP_START
-                h_attn = h_attn[mask]
             elif self.global_model_type == 'Performer':
                 h_attn = self.self_attn(h_dense, mask=mask)[mask]
             elif self.global_model_type == "Linformer":
