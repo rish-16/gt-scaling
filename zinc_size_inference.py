@@ -261,6 +261,7 @@ if __name__ == '__main__':
             batch_list = [sample for _ in range(BS)]
             batch = pyg.data.Batch.from_data_list(batch_list)
             batch.to(DEVICE)
+            # batch.attn_profile_timings = []
             
             with torch.no_grad():
                 start = time.time()
