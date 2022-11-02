@@ -249,7 +249,7 @@ if __name__ == '__main__':
             else:
                 pass
 
-        with open('bucket_inference_pcqfull.pickle', 'wb') as f:
+        with open('zinc_bucket_inference_full.pickle', 'wb') as f:
             pickle.dump(per_size_batches, f, protocol=pickle.HIGHEST_PROTOCOL)
         
         print ("Saved pickle file")
@@ -271,7 +271,7 @@ if __name__ == '__main__':
 
         pprint (TIMINGS)
 
-        with open("BIGBIRD_TIMINGS.json", "a") as f:
+        with open("TRANSFORMER_ZINC_BUCKET_TIMINGS.json", "a") as f:
             json.dump(TIMINGS, f)
 
         # # print (per_size_batches)
