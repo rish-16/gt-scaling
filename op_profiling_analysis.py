@@ -62,17 +62,31 @@ dot = [rec[1] for rec in grp_data]
 softmax = [rec[2] for rec in grp_data]
 av = [rec[3] for rec in grp_data]
 
+new_graph_sizes = []
+new_dot = []
+new_softmax = []
+new_av = []
+
+anomalies = [8, 11, 13, 15, 22, 25, 27, 30, 31, 33, 37, 40]
+
+for i in range(len(graph_sizes)):
+    if i not in anomalies:
+        new_graph_sizes.append(graph_sizes[i])
+        new_dot.append(dot[i])
+        new_softmax.append(softmax[i])
+        new_av.append(av[i])
+
 df = pd.DataFrame({
-    "Q.T @ K": dot,
-    "Softmax": softmax,
-    "A @ V": av,
-}, index=graph_sizes)
+    "Q.T @ K": new_dot,
+    "Softmax": new_softmax,
+    "A @ V": new_av,
+}, index=new_graph_sizes)
 plot = df.plot.bar(stacked=True)
 plt.xlabel("Number of atoms")
 plt.ylabel("Attention Ops Runtime (B=128) / sec")
 plt.show()
 
-plot.get_figure().savefig("figures/scaling/pcqm4m_attn_op_runtime.pdf", format="pdf")
+# plot.get_figure().savefig("figures/scaling/pcqm4m_attn_op_runtime.pdf", format="pdf")
 
 # "18": {
 #     "qk": 0.00010085105895996094,
