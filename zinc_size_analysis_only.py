@@ -299,11 +299,11 @@ if __name__ == '__main__':
                     start = time.time()
                     y1 = model(batch)
                     end = time.time()
+                    del batch
                     print (NN, " TIMING", end - start)
                     TIMINGS[NN] = end - start
             except Exception as e:
-                print (NN, e)
+                print (NN, e
 
-            del batch
 
         pprint (TIMINGS)
