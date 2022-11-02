@@ -197,6 +197,19 @@ def PREPROCESS_BATCH(batch, emb_dim, dim_emb1, dim_emb2, cfg):
     batch = compute_posenc_stats(batch, ["LapPE", "RWSE"], True, cfg)
     return batch
 
+def GET_AVG_BATCH_STATS(stats):
+    avg_gmp = 0
+    avg_lmp = 0
+
+    for i in range(len(stats)):
+        rec = stats[i]
+        avg_gmp += rec["global_mp"]
+        avg_lmp += rec["local_mp"]
+    avg_gmp = avg_gmp / len(stats) 
+    avg_lmp = avg_lmp / len(stats)     
+
+    return avg_gmp, avg_lmp
+
 if __name__ == '__main__':
     # Load cmd line args
     args = parse_args()
@@ -261,49 +274,33 @@ if __name__ == '__main__':
 
         print (per_size_batches.keys())
 
-        # for n_nodes, cur_batch in per_size_batches.items():
-        #     sample = cur_batch
-        #     per_size_batches[n_nodes] = [sample for _ in range(BS)]
-
-        # # print ("\n15 SAMPLE:")
-        # # pprint (per_size_batches[15][0])
-        # # pprint (per_size_batches[15][1])
-        # # pprint (per_size_batches[15][2])
-        # # pprint (per_size_batches[15][3])
-        # # pprint (per_size_batches[15][4])
-        # # print ("\n17 SAMPLE:")
-        # # pprint (per_size_batches[17][0])
-        # # pprint (per_size_batches[17][1])
-        # # pprint (per_size_batches[17][2])
-        # # pprint (per_size_batches[17][3])
-        # # pprint (per_size_batches[17][4])
-        # # print ("\n18 SAMPLE:")
-        # # pprint (per_size_batches[18][0])
-        # # pprint (per_size_batches[18][1])
-        # # pprint (per_size_batches[18][2])
-        # # pprint (per_size_batches[18][3])
-        # # pprint (per_size_batches[18][4])
-        # # print ()
-
-        # TIMINGS = {}
-        # for NN, cur_batch_list in per_size_batches.items():
-        #     temp = []
-        #     sample = cur_batch_list[0]
-        #     print (sample)
-        #     batch_list = [sample for _ in range(BS)]
-        #     batch = pyg.data.Batch.from_data_list(batch_list)
-        #     batch.to(DEVICE)
+        TIMINGS = {}
+        for NN, cur_batch_list in per_size_batches.items():
+            temp = []
+            sample = cur_batch_list[0]
+            # print (sample)
+            batch_list = [sample for _ in range(BS)]
+            batch = pyg.data.Batch.from_data_list(batch_list)
+            batch.to(DEVICE)
+            batch.attn_profile_timings = []
             
-        #     try:
-        #         with torch.no_grad():
-        #             start = time.time()
-        #             y1 = model(batch)
-        #             end = time.time()
-        #             print (NN, " TIMING", end - start)
-        #             TIMINGS[NN] = end - start
-        #     except Exception as e:
-        #         print (NN, e)
+            try:
+                with torch.no_grad():
+                    start = time.time()
+                    y1 = model(batch)
+                    end = time.time()
+                    batch_timings = batch.attn_profile_timings
 
-        #     del batch
+                    avg_gmp, avg_lmp = GET_AVG_BATCH_STATS(batch_timings)
 
-        # pprint (TIMINGS)
+                    TIMINGS[NN] = {
+                        "avg_global": avg_gmp,
+                        "avg_local": avg_lmp,
+                        "total": end - start
+                    }
+            except Exception as e:
+                print (NN, e)
+
+            del batch
+
+        pprint (TIMINGS)
