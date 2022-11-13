@@ -86,7 +86,7 @@ plt.xlabel("Number of atoms")
 plt.ylabel("Attention Ops Runtime (B=128) / sec")
 plt.show()
 
-# plot.get_figure().savefig("figures/scaling/pcqm4m_attn_op_runtime.pdf", format="pdf")
+plot.get_figure().savefig("figures/scaling/pcqm4m_attn_op_runtime.pdf", format="pdf")
 
 # "18": {
 #     "qk": 0.00010085105895996094,

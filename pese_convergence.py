@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 font = {'family' : 'normal',
-        'size'   : 17}
+        'size'   : 22}
 
 matplotlib.rc('font', **font)
 
